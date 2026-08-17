@@ -11,6 +11,8 @@ import Howitworksintro from "../component/Howitworksintro"
 import Blogintro from "../BLOG/Blogintro"
 import HomeTools from "../HOME/HomeTools"
 import ToolsHero from "../component/ToolsHero"
+import Reviewslider from "../Review/Reviewslider"
+import Pricing from "../component/Pricing"
 
 
 
@@ -28,7 +30,10 @@ const HomePage = () => {
           
          
           <Section3/>
-          <Section4/>
+          {/* <Section4/> */}
+ 
+           <Pricing/>
+          <Reviewslider/>
             <Footer/>
 
 

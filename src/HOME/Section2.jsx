@@ -54,28 +54,29 @@ const Section2 = () => {
         </motion.p>
 
         <h2
-          className="
-            mt-3
-            text-3xl font-black
-            tracking-tight
-            text-gray-900
-            md:text-4xl
-          "
-        >
-          Everything You Need{" "}
-          <span
-            className="
-              bg-gradient-to-r
-              from-blue-600
-              via-blue-400
-              to-blue-700
-              bg-clip-text
-              text-transparent
-            "
-          >
-            In One Place
-          </span>
-        </h2>
+  className="
+    mt-3 mx-auto
+    max-w-[1000px]
+    text-4xl md:text-7xl
+    font-black
+    tracking-[-0.04em]
+    text-gray-950
+  "
+>
+  Everything You Need{" "}
+  <span
+    className="
+      bg-gradient-to-r
+      from-blue-700
+      via-blue-500
+      to-blue-800
+      bg-clip-text
+      text-transparent
+    "
+  >
+    In One Place
+  </span>
+</h2>
 
         <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-gray-500 md:text-base">
           Powerful AI and SEO tools designed to make your workflow

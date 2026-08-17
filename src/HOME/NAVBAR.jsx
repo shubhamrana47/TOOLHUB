@@ -16,7 +16,10 @@ import {
   Menu,
   X,
   Wrench,
+  CircleUserRound,
+  UserRound,
 } from "lucide-react";
+import Footer from "./Footer";
 
 function NAVBAR() {
   const navigate = useNavigate();
@@ -28,6 +31,9 @@ function NAVBAR() {
 
   return (
     <>
+        
+      
+
       {/* ================= NAVBAR ================= */}
       <header className="w-full bg-white px-3 py-3 md:px-6 md:py-5">
         <div
@@ -63,154 +69,7 @@ function NAVBAR() {
           {/* ================= DESKTOP NAVIGATION ================= */}
           <nav className="hidden items-center gap-2 lg:flex">
             {/* PRODUCT */}
-            <div className="group relative">
-              <button
-                className="
-                  flex
-                  items-center
-                  gap-2
-                  rounded-2xl
-                  px-5
-                  py-4
-                  text-[16px]
-                  font-medium
-                  text-gray-800
-                  transition
-                  hover:bg-blue-50
-                  hover:text-blue-600
-                "
-              >
-                <Home size={20} className="text-blue-600" />
-                Product
-              </button>
-
-              {/* PRODUCT DROPDOWN */}
-              <div
-                className="
-                  invisible
-                  absolute
-                  left-48
-                  top-[65px]
-                  z-50
-                  w-[700px]
-                  -translate-x-1/2
-                  translate-y-2
-                  rounded-3xl
-                  border
-                  border-blue-100
-                  bg-white
-                  p-6
-                  opacity-0
-                  shadow-[0_20px_60px_rgba(37,99,235,0.15)]
-                  transition-all
-                  duration-300
-                  group-hover:visible
-                  group-hover:translate-y-0
-                  group-hover:opacity-100
-                "
-              >
-                {/* Dropdown Header */}
-                <div className="mb-5 flex items-center justify-between border-b border-gray-100 pb-4 left-36">
-                  <div>
-                    <p className="text-xs font-bold tracking-[3px] text-gray-400">
-                      PRODUCT
-                    </p>
-
-                    <p className="mt-1 text-sm text-gray-500">
-                      Everything you need in one place
-                    </p>
-                  </div>
-
-                  <span className="rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-600">
-                    All Tools →
-                  </span>
-                </div>
-
-                {/* Product Items */}
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    [
-                      Grid2X2,
-                      "Features",
-                      "Everything your AI can do on your site",
-                      "/features",
-                    ],
-                    [
-                      Wrench,
-                      "All 280 Tools",
-                      "The full catalog of useful tools",
-                      "/all280Tools",
-                    ],
-                    [
-                      Rocket,
-                      "AI Readiness Assessment",
-                      "Check if your website is ready for AI search",
-                      "/aIReadinessAssessment",
-                    ],
-                    [
-                      Wrench,
-                      "Free WordPress Plugin",
-                      "Track AI bots and AEO on WordPress",
-                      "/freeWordPressPlugin",
-                    ],
-                    [
-                      Tag,
-                      "AI SEO Score",
-                      "Score any page for search and AI",
-                      "/aISEOScore",
-                    ],
-                    [
-                      MessageSquare,
-                      "AI Visibility",
-                      "See what AI says about your brand",
-                      "/aIVisibility",
-                    ],
-                  ].map(([Icon, title, description, path], index) => (
-                    <Link
-                      key={index}
-                      to={path}
-                      className="
-                        flex
-                        gap-4
-                        rounded-2xl
-                        border
-                        border-transparent
-                        p-4
-                        transition
-                        hover:border-blue-100
-                        hover:bg-blue-50/60
-                      "
-                    >
-                      <div
-                        className="
-                          flex
-                          h-11
-                          w-11
-                          shrink-0
-                          items-center
-                          justify-center
-                          rounded-xl
-                          bg-blue-50
-                          text-blue-600
-                        "
-                      >
-                        <Icon size={21} />
-                      </div>
-
-                      <div>
-                        <h3 className="font-semibold text-gray-900">
-                          {title}
-                        </h3>
-
-                        <p className="mt-1 text-sm leading-5 text-gray-500">
-                          {description}
-                        </p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
+          
 
             {/* SERVICES */}
             <div className="group relative">
@@ -274,26 +133,31 @@ function NAVBAR() {
                   {[
                     [
                       FileText,
-                      "AI Content And Apps",
-                      "Done-for-you AI articles and web apps",
+                      "Search Keywords",
+                      "Done-for-you AI articles and web app",
+                      "geminiResponse"
                     ],
                     [
                       Rocket,
-                      "AI SEO",
-                      "Improve your visibility on search engines",
+                      "Create a blog",
+                      "Try out our new feature ",
+                      "blog"
                     ],
                     [
                       Wrench,
-                      "Custom AI Tool And Plugin",
-                      "Custom WordPress plugins and automation",
+                      "Website Audit ",
+                      "Tool for auditing your website",
+                      null
                     ],
                     [
                       Grid2X2,
-                      "AI Integration",
-                      "Integrate AI with your data and website",
+                      "Coming Soon",
+                      "Will be available soon ",
+                      null
                     ],
-                  ].map(([Icon, title, description], index) => (
-                    <div
+                  ].map(([Icon, title, description,path], index) => (
+                 <Link to={`/${path}`}>
+                  <div 
                       key={index}
                       className="
                         flex
@@ -304,7 +168,7 @@ function NAVBAR() {
                         hover:bg-blue-50
                       "
                     >
-                      <div
+                      <div 
                         className="
                           flex
                           h-11
@@ -330,6 +194,8 @@ function NAVBAR() {
                         </p>
                       </div>
                     </div>
+                  </Link>
+                    
                   ))}
                 </div>
               </div>
@@ -337,7 +203,7 @@ function NAVBAR() {
 
             {/* PRICING */}
             <Link
-              to=""
+              to="/pricing"
               className="
                 flex
                 items-center
@@ -403,7 +269,7 @@ function NAVBAR() {
 
             {/* BLOG */}
             <Link
-              to=""
+              to="/blogdisplay"
               className="
                 flex
                 items-center
@@ -472,28 +338,103 @@ function NAVBAR() {
                 <span>→</span>
               </button>
             )}
+        
+         {token && 
+                   <div className="group relative">
+  {/* User Icon */}
+  <button
+    className="
+      flex h-11 w-11 right-16
+      items-center justify-center
+      rounded-full
+      bg-blue-50
+      text-blue-600
+      transition-all duration-300
+      hover:bg-blue-600
+      hover:text-white
+      hover:shadow-lg
+      hover:shadow-blue-600/20
+    "
+  >
+    <UserRound size={22} />
+  </button>
 
-            {token && (
-              <button
-                onClick={() => {
-                  dispatch(logout());
-                  navigate("/login");
-                  toast.info("Logged out successfully");
-                }}
-                className="
-                  rounded-xl
-                  bg-blue-600
-                  px-6
-                  py-3
-                  font-semibold
-                  text-white
-                  transition
-                  hover:bg-blue-700
-                "
-              >
-                Logout
-              </button>
-            )}
+  {/* Dropdown */}
+  <div
+    className="
+      invisible
+      absolute
+      right-0
+      top-14
+      z-50
+      w-52
+      translate-y-2
+      rounded-2xl
+      border
+      border-blue-100
+      bg-white
+      p-2
+      opacity-0
+      shadow-[0_15px_40px_rgba(37,99,235,0.15)]
+      transition-all
+      duration-300
+      ease-out
+
+      group-hover:visible
+      group-hover:translate-y-0
+      group-hover:opacity-100
+    "
+  >
+    {/* Dashboard */}
+    <Link
+      to="/dashboard"
+      className="
+        flex items-center
+        rounded-xl
+        px-4 py-3
+        text-sm font-semibold
+        text-gray-700
+        transition-all duration-200
+        hover:bg-blue-50
+        hover:text-blue-600
+      "
+    >
+      DASHBOARD
+    </Link>
+
+    {/* Divider */}
+    <div className="my-1 h-px bg-gray-100" />
+
+    {/* Logout */}
+    {token && (
+      <button
+        onClick={() => {
+          dispatch(logout());
+          navigate("/login");
+          toast.info("Logged out successfully");
+        }}
+        className="
+          w-full
+          rounded-xl
+          px-4 py-3
+          text-left
+          text-sm font-semibold
+          text-red-500
+          transition-all duration-200
+          hover:bg-red-50
+          hover:text-red-600
+        "
+      >
+        LOGOUT
+      </button>
+    )}
+  </div>
+</div>
+         }   
+
+ 
+              
+
           </div>
 
           {/* ================= MOBILE BUTTON ================= */}
@@ -655,7 +596,8 @@ function NAVBAR() {
             </div>
           </div>
         )}
-      </header>
+      </header> 
+    
     </>
   );
 }

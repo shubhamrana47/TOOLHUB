@@ -178,8 +178,9 @@ const ToolsHero = () => {
           </div>
 
           {/* Benefits */}
+          
           <div
-            className="
+            className=" hidden
               mt-10
               grid
               grid-cols-1
@@ -226,6 +227,7 @@ const ToolsHero = () => {
               );
             })}
           </div>
+
         </div>
 
         {/* ================= RIGHT IMAGE ================= */}

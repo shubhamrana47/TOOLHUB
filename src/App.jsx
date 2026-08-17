@@ -13,6 +13,11 @@ import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Review from "./pages/Review";
+import Pricing from "./component/Pricing";
+import ProtectedRoute from "./ProtectedRoute";
+import Blogdisplay from "./pages/Blogdisplay";
+import Dashboard from "./component/Dashboard";
+import Dashboardpage from "./pages/Dashboardpage";
 function App() {
   return (
     <div className="w-full h-full">
@@ -22,21 +27,48 @@ function App() {
         ></Route>
           <Route path="/howitworks" 
           element={<Howitworks/>}></Route>
-          <Route path="/blog"
-             element={<Blog/>}></Route>
+          <Route path="/blogdisplay"
+             element={
+             
+                   <Blogdisplay/>
             
+            }></Route>
+            
+            <Route 
+             path="/blog" element={
+              <ProtectedRoute>
+                <Blog/>
+              </ProtectedRoute>
+             }
+            ></Route>
           <Route path="/login" element={<Login/>}/>
           <Route path="/signup" element={<Signup/>}></Route>  
-           
+           <Route path="/dashboard" element={<Dashboardpage/>}></Route>
            
          <Route path="/forgot-password" element={<ForgotPassword/>}/>
            <Route path="/reset-password" element={<ResetPassword/>}/>
 
-            <Route path="/geminiResponse" element={<GEMINIRESPONSE/>}/>
-          <Route path="/features" element={<Features/>}></Route>
 
-          <Route path="/review" element={<Review/>} ></Route>
-        
+            
+            <Route path="/geminiResponse" 
+            element={
+            <ProtectedRoute>
+           <GEMINIRESPONSE/>
+            </ProtectedRoute>
+}/>
+
+          <Route path="/features" element={<Features/>}></Route>
+            
+            <Route path="/blogdisplay" element={<Blogdisplay/>}></Route>
+            
+
+          <Route path="/review"
+          element={<ProtectedRoute>
+                <Review/>
+          </ProtectedRoute>
+           } ></Route>
+         <Route path="/pricing" element={<Pricing/>}></Route>
+
       </Routes>
 
       <ToastContainer
