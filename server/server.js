@@ -89,12 +89,12 @@ const PORT =
 app.listen(
   PORT,
   () => {
-    console.log(
-      `Server running on port ${PORT}`
-    );
+     console.log(`Server running on port ${PORT}`);
+  console.log(`Audit API mounted at /api/audit`);
+    
 
     console.log(
-      `Audit API: http://localhost:${PORT}/api/audit`
+      `Audit API: /api/audit`
     );
   }
 );
