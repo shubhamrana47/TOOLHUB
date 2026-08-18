@@ -21,7 +21,7 @@ const Reviewslider = () => {
   const getReviews = async () => {
     try {
       const response = await axios.get(
-        `import.meta.env.VITE_API_URL}/api/reviews/getReview`
+        `${import.meta.env.VITE_API_URL}/api/reviews/getReview`
       );
 
       console.log("Reviews:", response.data);
