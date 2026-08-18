@@ -56,7 +56,7 @@ const ReviewForm = () => {
       setLoading(true);
 
       const response = await axios.post(
-        "http://localhost:5000/api/reviews/createReview",
+        `${import.meta.env.VITE_API_URL}/api/reviews/createReview`,
         {
           name: formData.name,
           email: formData.email,

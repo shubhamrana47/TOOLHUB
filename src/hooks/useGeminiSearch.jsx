@@ -15,7 +15,7 @@ export default function useGeminiSearch() {
       setLoading(true);
 
       const { data } = await axios.post(
-        "http://localhost:5000/api/gemini/chat",
+        `${import.meta.env.VITE_API_URL}/api/gemini/chat`,
         {
           prompt: `
 You are an SEO expert.

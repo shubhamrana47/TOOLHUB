@@ -70,7 +70,7 @@ const ResetPassword = () => {
       setLoading(true);
 
       const response = await axios.post(
-        "http://localhost:5000/api/auth/reset-password",
+        `${import.meta.env.VITE_API_URL}/api/auth/reset-password`,
         {
           email,
           password: formData.password,

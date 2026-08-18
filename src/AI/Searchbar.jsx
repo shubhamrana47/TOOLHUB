@@ -17,7 +17,7 @@ const Searchbar = ({ onSearchResults }) => {
       setLoading(true);
 
       const response = await axios.post(
-        "http://localhost:5000/api/gemini/chat",
+        `${import.meta.env.VITE_API_URL}/api/gemini/chat`,
         {
           prompt: `${question} seo keywords`,
         }
