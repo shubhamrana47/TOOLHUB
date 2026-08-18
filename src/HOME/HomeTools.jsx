@@ -40,7 +40,7 @@ const tools = [
     description:
       "Analyze your website's performance, SEO score, speed, security and get actionable insights to improve.",
     button: "Audit Now",
-    path:"/website-audit",
+    path:"/websiteaudit",
     iconBg: "bg-blue-50",
   },
 ];

@@ -18,6 +18,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Blogdisplay from "./pages/Blogdisplay";
 import Dashboard from "./component/Dashboard";
 import Dashboardpage from "./pages/Dashboardpage";
+import Websiteauditpage from "./pages/Websiteauditpage";
 function App() {
   return (
     <div className="w-full h-full">
@@ -56,6 +57,10 @@ function App() {
            <GEMINIRESPONSE/>
             </ProtectedRoute>
 }/>
+
+           <Route  path="/websiteaudit" element={<ProtectedRoute>
+            <Websiteauditpage/>
+           </ProtectedRoute>}></Route>
 
           <Route path="/features" element={<Features/>}></Route>
             

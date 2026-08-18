@@ -14,10 +14,13 @@
   "type": "module",
   "dependencies": {
     "@google/genai": "^2.16.0",
+    "axios": "^1.19.0",
     "bcrypt": "^6.0.0",
+    "cheerio": "^1.2.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "googleapis": "^175.0.0",
     "mongoose": "^9.9.2",
     "nodemailer": "^9.0.5"
   },

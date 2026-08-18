@@ -103,7 +103,7 @@ const ToolsHero = () => {
           <h1
             className="
               text-4xl
-              font-bold
+              font-extrabold
               leading-[1.05]
               tracking-tight
               text-[#101828]
