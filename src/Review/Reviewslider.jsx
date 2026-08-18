@@ -20,11 +20,10 @@ const Reviewslider = () => {
 
   const getReviews = async () => {
     try {
-      console.log("VITE_API_URL =", import.meta.env.VITE_API_URL);
-
-const response = await axios.get(
-  `${import.meta.env.VITE_API_URL}/api/reviews/getReview`
-);
+           console.log(
+      "VITE_API_URL =",
+      import.meta.env.VITE_API_URL
+    );
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/reviews/getReview`
       );
