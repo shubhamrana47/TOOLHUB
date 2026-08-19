@@ -24,9 +24,9 @@ const Reviewslider = () => {
       "VITE_API_URL =",
       import.meta.env.VITE_API_URL
     );
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/reviews/getReview`
-      );
+    const response = await axios.get(
+  "https://toolhub-backend-ledj.onrender.com/api/reviews/getReview"
+);
 
       console.log("Reviews:", response.data);
 
