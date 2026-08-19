@@ -1,24 +1,34 @@
-import ai from "../config/gemini.js";
+import { generateGeminiContent } from "../config/gemini.js";
+
+
+// ============================================================
+// GENERATE SEO KEYWORDS
+// ============================================================
 
 export const chatWithGemini = async (req, res) => {
   try {
     const { prompt } = req.body;
 
-    if (!prompt) {
+    if (!prompt || !prompt.trim()) {
       return res.status(400).json({
         success: false,
         message: "Prompt is required",
       });
     }
 
+    console.log("=================================");
+    console.log("Generating SEO keywords...");
+    console.log("Search query:", prompt);
+    console.log("=================================");
+
     const finalPrompt = `
-You are an SEO Expert.
+You are an expert SEO keyword researcher.
 
 For the search query:
 
-"${prompt}"
+"${prompt.trim()}"
 
-Generate EXACTLY 6 SEO keywords.
+Generate EXACTLY 6 relevant SEO keywords.
 
 Return ONLY valid JSON.
 
@@ -35,42 +45,75 @@ Return ONLY valid JSON.
 }
 
 Rules:
-- Return exactly 6 objects.
-- searchVolume should be an estimated monthly search volume.
-- seoDifficulty between 1 and 100.
-- competition between 0 and 1.
-- cpc in INR.
+
+- Return exactly 6 keyword objects.
+- Every keyword must be relevant to the search query.
+- searchVolume must be an estimated monthly search volume.
+- seoDifficulty must be a number between 1 and 100.
+- competition must be a number between 0 and 1.
+- cpc must be an estimated CPC in INR.
 - Return ONLY JSON.
-- Do not use markdown.
-- Do not write explanations.
+- Do not use Markdown.
+- Do not use code fences.
+- Do not add explanations.
+- Do not add text before or after the JSON.
 `;
 
-    const response = await ai.models.generateContent({
-      model: "gemini-flash-latest",
-      contents: finalPrompt,
-    });
+    const text = await generateGeminiContent(finalPrompt);
 
-    let text = response.text;
+    let cleanedText = text
+      .replace(/```json/gi, "")
+      .replace(/```/g, "")
+      .trim();
 
-    
-    text = text.replace(/```json/g, "").replace(/```/g, "").trim();
+    let data;
 
-    const data = JSON.parse(text);
+    try {
+      data = JSON.parse(cleanedText);
+    } catch (parseError) {
+      console.error("Gemini JSON parse error:", parseError);
+      console.error("Gemini returned:", cleanedText);
 
-    res.status(200).json({
+      return res.status(500).json({
+        success: false,
+        message: "Gemini returned invalid JSON",
+      });
+    }
+
+    if (
+      !data.keywords ||
+      !Array.isArray(data.keywords)
+    ) {
+      return res.status(500).json({
+        success: false,
+        message: "Invalid Gemini response format",
+      });
+    }
+
+    // Make sure exactly 6 are returned
+    const keywords = data.keywords.slice(0, 6);
+
+    console.log("Keywords generated:", keywords.length);
+
+    return res.status(200).json({
       success: true,
-      keywords: data.keywords,
+      keywords,
     });
 
   } catch (error) {
-    console.error(error);
+    console.error("Gemini keyword generation error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: error.message,
+      message: error.message || "Gemini API failed",
     });
   }
 };
+
+
+// ============================================================
+// GENERATE BLOG
+// ============================================================
 
 export const generateBlog = async (req, res) => {
   try {
@@ -80,40 +123,69 @@ export const generateBlog = async (req, res) => {
       wordLimit,
     } = req.body;
 
+    // --------------------------------------------------------
     // Validate topic
-    if (!topic) {
+    // --------------------------------------------------------
+
+    if (!topic || !topic.trim()) {
       return res.status(400).json({
         success: false,
         message: "Topic is required",
       });
     }
 
+    // --------------------------------------------------------
     // Validate keywords
-    if (!keywords || !Array.isArray(keywords) || keywords.length === 0) {
+    // --------------------------------------------------------
+
+    if (
+      !keywords ||
+      !Array.isArray(keywords) ||
+      keywords.length === 0
+    ) {
       return res.status(400).json({
         success: false,
         message: "At least one keyword is required",
       });
     }
 
+    // --------------------------------------------------------
     // Validate word limit
-    if (!wordLimit || Number(wordLimit) < 100) {
+    // --------------------------------------------------------
+
+    if (
+      !wordLimit ||
+      Number(wordLimit) < 100
+    ) {
       return res.status(400).json({
         success: false,
         message: "Word limit must be at least 100",
       });
     }
 
-const finalPrompt = `
+    console.log("=================================");
+    console.log("Generating blog...");
+    console.log("Topic:", topic);
+    console.log("Keywords:", keywords);
+    console.log("Word limit:", wordLimit);
+    console.log("=================================");
+
+    // --------------------------------------------------------
+    // Blog prompt
+    // --------------------------------------------------------
+
+    const finalPrompt = `
 You are an expert SEO content writer and SEO strategist.
 
 Create a complete SEO-optimized blog based on the information below.
 
 TOPIC:
-"${topic}"
+"${topic.trim()}"
 
 TARGET KEYWORDS:
-${keywords.map((keyword) => `- ${keyword}`).join("\n")}
+${keywords
+  .map((keyword) => `- ${keyword}`)
+  .join("\n")}
 
 TARGET WORD LIMIT:
 ${wordLimit} words
@@ -127,46 +199,48 @@ IMPORTANT SEO REQUIREMENTS:
 - Use semantic keywords related to the topic.
 - Write an SEO-friendly meta title.
 - Write an SEO-friendly meta description.
-- Create a short, SEO-friendly URL slug.
+- Create a short SEO-friendly URL slug.
 - Use proper headings and subheadings.
 - Keep paragraphs short and readable.
 - Include examples where useful.
 - Do not mention AI or Gemini.
 - Do not include unnecessary explanations.
 - The blog should be approximately ${wordLimit} words.
-- Do not exceed ${wordLimit} words for the blog content.
+- Do not exceed ${wordLimit} words for the BLOG section.
 
 
-VERY IMPORTANT BLOG FORMATTING RULES:
+BLOG FORMATTING RULES:
 
-- Do NOT use hashtags (#) anywhere in the blog.
-- Do NOT use Markdown heading syntax such as #, ##, or ###.
-- Do NOT use asterisks for bold or italic text.
+- Do NOT use hashtags (#).
+- Do NOT use Markdown heading syntax.
+- Do NOT use asterisks.
 - Do NOT use Markdown formatting.
 - Write headings as plain text.
-- Keep each heading on its own line.
+- Keep every heading on its own line.
 - Keep paragraphs separated by blank lines.
-- The blog must contain clean plain text only.
--Headings must be in bold characters .
-RETURN THE RESPONSE IN EXACTLY THIS FORMAT:
+- Use clean plain text.
+- Do not use code fences.
+
+
+RETURN EXACTLY THIS FORMAT:
 
 META TITLE:
-[Write an SEO-friendly meta title, preferably under 60 characters]
+[SEO-friendly meta title under 60 characters]
 
 META DESCRIPTION:
-[Write an SEO-friendly meta description, preferably between 150-160 characters]
+[SEO-friendly meta description between 150-160 characters]
 
 IMAGE PROMPT:
-[Write an seo friendly image prompt ,that must be according to blog title ]
+[SEO-friendly image prompt based on the blog title]
 
 URL SLUG:
-[Write a short SEO-friendly URL slug using lowercase words separated by hyphens]
+[short lowercase SEO-friendly slug using hyphens]
 
 BLOG:
 
 [Blog Title]
 
-[Introduction paragraph]
+[Introduction]
 
 First Main Heading
 
@@ -187,36 +261,34 @@ Additional Heading
 Conclusion
 
 [Conclusion]
+
+
 IMPORTANT:
 
-- Return ONLY these four sections:
+- Return ONLY:
   META TITLE
   META DESCRIPTION
+  IMAGE PROMPT
   URL SLUG
   BLOG
-- Do not add JSON.
-- Do not add Markdown code fences.
+
+- Do not return JSON.
+- Do not use Markdown code fences.
 - Do not add explanations before META TITLE.
-- Do not add explanations after the BLOG.
-- Do not use #, ##, ###, *, or other Markdown symbols inside the BLOG.
-- The BLOG section must contain the complete article.
+- Do not add explanations after BLOG.
+- Do not use #, ##, ###, *, or other Markdown symbols.
+- BLOG must contain the complete article.
 `;
 
+    // --------------------------------------------------------
+    // Generate blog
+    // --------------------------------------------------------
 
+    const blog = await generateGeminiContent(finalPrompt);
 
-    console.log("Generating blog...");
-    console.log("Topic:", topic);
-    console.log("Keywords:", keywords);
-    console.log("Word limit:", wordLimit);
+    console.log("Blog generated successfully");
 
-    const response = await ai.models.generateContent({
-      model: "gemini-flash-latest",
-      contents: finalPrompt,
-    });
-
-    const blog = response.text;
-
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       blog,
     });
@@ -224,9 +296,9 @@ IMPORTANT:
   } catch (error) {
     console.error("Blog generation error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: error.message,
+      message: error.message || "Blog generation failed",
     });
   }
 };
