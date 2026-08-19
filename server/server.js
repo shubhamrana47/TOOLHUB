@@ -28,6 +28,7 @@ app.use(
       "http://localhost:5173",
        "http://localhost:5174",
       "https://toolhub-mauve-two.vercel.app",
+      "https://toolhubsite.vercel.app",
     ],
     credentials: true,
   })
