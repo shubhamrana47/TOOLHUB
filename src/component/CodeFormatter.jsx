@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import prettier from "prettier/standalone";
+import * as prettier from "prettier/standalone";
+
 import babelParser from "prettier/plugins/babel";
 import estreeParser from "prettier/plugins/estree";
 import htmlParser from "prettier/plugins/html";
 import cssParser from "prettier/plugins/postcss";
 import markdownParser from "prettier/plugins/markdown";
 import typescriptParser from "prettier/plugins/typescript";
-import xmlPlugin from "prettier-plugin-xml";
+
+import xmlPlugin from "@prettier/plugin-xml";
 
 import {
   Copy,
@@ -63,38 +65,47 @@ const CodeFormatter = () => {
     },
   ];
 
+  const getPlugins = () => {
+    const plugins = [
+      babelParser,
+      estreeParser,
+      htmlParser,
+      cssParser,
+      markdownParser,
+      typescriptParser,
+    ];
+
+    if (language === "xml") {
+      plugins.push(xmlPlugin);
+    }
+
+    return plugins;
+  };
+
   const formatCode = async () => {
     if (!code.trim()) {
       setError("Please enter some code first.");
+      setFormattedCode("");
       return;
     }
 
     setLoading(true);
     setError("");
+    setFormattedCode("");
 
     try {
       const selectedLanguage = languages.find(
         (item) => item.value === language
       );
 
-      const parser = selectedLanguage.parser;
-
-      const plugins = [
-        babelParser,
-        estreeParser,
-        htmlParser,
-        cssParser,
-        markdownParser,
-        typescriptParser,
-      ];
-
-      if (language === "xml") {
-        plugins.push(xmlPlugin);
+      if (!selectedLanguage) {
+        throw new Error("Unsupported language selected.");
       }
 
       const result = await prettier.format(code, {
-        parser,
-        plugins,
+        parser: selectedLanguage.parser,
+        plugins: getPlugins(),
+
         semi: true,
         singleQuote: true,
         tabWidth: 2,
@@ -109,7 +120,7 @@ const CodeFormatter = () => {
 
       setError(
         err?.message ||
-          "Unable to format this code. Please check the syntax."
+          "Unable to format this code. Please check your syntax."
       );
 
       setFormattedCode("");
@@ -121,13 +132,18 @@ const CodeFormatter = () => {
   const copyCode = async () => {
     if (!formattedCode) return;
 
-    await navigator.clipboard.writeText(formattedCode);
+    try {
+      await navigator.clipboard.writeText(formattedCode);
 
-    setCopied(true);
+      setCopied(true);
 
-    setTimeout(() => {
-      setCopied(false);
-    }, 2000);
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch (err) {
+      console.error("Copy error:", err);
+      setError("Unable to copy the formatted code.");
+    }
   };
 
   const downloadCode = () => {
@@ -157,6 +173,7 @@ const CodeFormatter = () => {
     link.download = `formatted-code.${extension}`;
 
     document.body.appendChild(link);
+
     link.click();
 
     document.body.removeChild(link);
@@ -168,20 +185,28 @@ const CodeFormatter = () => {
     setCode("");
     setFormattedCode("");
     setError("");
+    setCopied(false);
   };
 
   const useFormattedCode = () => {
+    if (!formattedCode) return;
+
     setCode(formattedCode);
     setFormattedCode("");
+    setError("");
+  };
+
+  const handleLanguageChange = (event) => {
+    setLanguage(event.target.value);
+    setFormattedCode("");
+    setError("");
   };
 
   return (
     <div className="min-h-screen bg-white px-4 py-12">
       <div className="mx-auto max-w-7xl">
-
         {/* Header */}
         <div className="mb-10 text-center">
-
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50">
             <Code2 className="h-8 w-8 text-blue-600" />
           </div>
@@ -194,66 +219,57 @@ const CodeFormatter = () => {
             Clean, organize and format your code instantly.
             Everything runs directly in your browser.
           </p>
-
         </div>
 
         {/* Main Card */}
         <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm md:p-7">
-
           {/* Toolbar */}
           <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-
             {/* Language */}
             <div className="flex items-center gap-3">
-
-              <label className="text-sm font-semibold text-gray-700">
+              <label
+                htmlFor="language"
+                className="text-sm font-semibold text-gray-700"
+              >
                 Language
               </label>
 
               <select
+                id="language"
                 value={language}
-                onChange={(e) => {
-                  setLanguage(e.target.value);
-                  setFormattedCode("");
-                  setError("");
-                }}
-                className="rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                onChange={handleLanguageChange}
+                className="rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               >
                 {languages.map((item) => (
-                  <option
-                    key={item.value}
-                    value={item.value}
-                  >
+                  <option key={item.value} value={item.value}>
                     {item.label}
                   </option>
                 ))}
               </select>
-
             </div>
 
             {/* Actions */}
             <div className="flex flex-wrap gap-2">
-
               <button
+                type="button"
                 onClick={clearCode}
-                className="inline-flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50"
+                className="inline-flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-600 transition hover:bg-gray-50"
               >
                 <Trash2 className="h-4 w-4" />
                 Clear
               </button>
 
               <button
+                type="button"
                 onClick={formatCode}
                 disabled={loading}
-                className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <Wand2 className="h-4 w-4" />
 
                 {loading ? "Formatting..." : "Format Code"}
               </button>
-
             </div>
-
           </div>
 
           {/* Error */}
@@ -265,12 +281,9 @@ const CodeFormatter = () => {
 
           {/* Editors */}
           <div className="grid gap-5 lg:grid-cols-2">
-
             {/* Input */}
             <div className="overflow-hidden rounded-2xl border border-gray-200">
-
               <div className="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-3">
-
                 <span className="text-sm font-bold text-gray-700">
                   Input Code
                 </span>
@@ -278,37 +291,33 @@ const CodeFormatter = () => {
                 <span className="text-xs text-gray-400">
                   {code.length} characters
                 </span>
-
               </div>
 
               <textarea
                 value={code}
-                onChange={(e) => {
-                  setCode(e.target.value);
+                onChange={(event) => {
+                  setCode(event.target.value);
                   setError("");
                 }}
                 placeholder={`Paste your ${language} code here...`}
                 spellCheck="false"
                 className="min-h-[500px] w-full resize-none bg-white p-5 font-mono text-sm leading-6 text-gray-800 outline-none"
               />
-
             </div>
 
             {/* Output */}
             <div className="overflow-hidden rounded-2xl border border-gray-200">
-
               <div className="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-3">
-
                 <span className="text-sm font-bold text-gray-700">
                   Formatted Code
                 </span>
 
                 <div className="flex gap-2">
-
                   <button
+                    type="button"
                     onClick={copyCode}
                     disabled={!formattedCode}
-                    className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-gray-600 hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-40"
+                    className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-gray-600 transition hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     {copied ? (
                       <>
@@ -324,16 +333,15 @@ const CodeFormatter = () => {
                   </button>
 
                   <button
+                    type="button"
                     onClick={downloadCode}
                     disabled={!formattedCode}
-                    className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-gray-600 hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-40"
+                    className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-gray-600 transition hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     <Download className="h-3.5 w-3.5" />
                     Download
                   </button>
-
                 </div>
-
               </div>
 
               <textarea
@@ -343,60 +351,52 @@ const CodeFormatter = () => {
                 placeholder="Your formatted code will appear here..."
                 className="min-h-[500px] w-full resize-none bg-gray-950 p-5 font-mono text-sm leading-6 text-gray-100 outline-none"
               />
-
             </div>
-
           </div>
 
           {/* Use formatted code */}
           {formattedCode && (
             <div className="mt-5 flex justify-end">
-
               <button
+                type="button"
                 onClick={useFormattedCode}
-                className="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-bold text-blue-600 hover:bg-blue-100"
+                className="rounded-xl border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-bold text-blue-600 transition hover:bg-blue-100"
               >
                 Replace Input With Formatted Code
               </button>
-
             </div>
           )}
-
         </div>
 
         {/* Info */}
         <div className="mt-8 grid gap-4 md:grid-cols-3">
-
           <div className="rounded-2xl border border-gray-200 p-5">
             <h3 className="font-bold text-gray-900">
               ⚡ Instant Formatting
             </h3>
+
             <p className="mt-2 text-sm text-gray-500">
-              Format your code directly in your browser without
-              sending it to a server.
+              Format your code directly in your browser without sending it to
+              a server.
             </p>
           </div>
 
           <div className="rounded-2xl border border-gray-200 p-5">
-            <h3 className="font-bold text-gray-900">
-              🔒 Private
-            </h3>
+            <h3 className="font-bold text-gray-900">🔒 Private</h3>
+
             <p className="mt-2 text-sm text-gray-500">
               Your source code stays on your device.
             </p>
           </div>
 
           <div className="rounded-2xl border border-gray-200 p-5">
-            <h3 className="font-bold text-gray-900">
-              📥 Download
-            </h3>
+            <h3 className="font-bold text-gray-900">📥 Download</h3>
+
             <p className="mt-2 text-sm text-gray-500">
               Download your formatted code as a source file.
             </p>
           </div>
-
         </div>
-
       </div>
     </div>
   );

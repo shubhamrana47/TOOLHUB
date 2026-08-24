@@ -10,7 +10,7 @@ import {
   CheckCircle2,
   Code2Icon,
   MessageSquareCode,
-  WrenchIcon,
+  Wrench,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -48,7 +48,7 @@ const tools = [
   },
     {
     number: "04",
-    icon:WrenchIcon,
+    icon:Wrench,
     title: "Image Convertor",
     description:" Tool for converting image online easily",
     button: "Convert Now",
