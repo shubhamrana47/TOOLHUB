@@ -19,6 +19,11 @@ import Blogdisplay from "./pages/Blogdisplay";
 import Dashboard from "./component/Dashboard";
 import Dashboardpage from "./pages/Dashboardpage";
 import Websiteauditpage from "./pages/Websiteauditpage";
+import ImageConverter from "./component/ImageConvertor";
+import ImageConvertorPage from "./pages/ImageConvertorPage";
+import DocumentConvertorPage from "./pages/DocumentConvertorPage";
+import CodeFormatter from "./component/CodeFormatter";
+import CodeFormatterPage from "./pages/CodeFormatterPage";
 function App() {
   return (
     <div className="w-full h-full">
@@ -67,6 +72,11 @@ function App() {
             <Route path="/blogdisplay" element={<Blogdisplay/>}></Route>
             
 
+          <Route path="/imageconvertor" element={<ImageConvertorPage/>}></Route>
+           
+           <Route path="/documentconvertor" element={<DocumentConvertorPage/>} ></Route>
+
+           <Route path="/codeformatter" element={<CodeFormatterPage/>}></Route>
           <Route path="/review"
           element={<ProtectedRoute>
                 <Review/>

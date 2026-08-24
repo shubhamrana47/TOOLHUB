@@ -18,6 +18,8 @@ import {
   Wrench,
   CircleUserRound,
   UserRound,
+  MessageSquareCode,
+  Code2Icon,
 } from "lucide-react";
 import Footer from "./Footer";
 
@@ -32,7 +34,7 @@ function NAVBAR() {
   return (
     <>
         
-      
+             
 
       {/* ================= NAVBAR ================= */}
       <header className="w-full bg-white px-3 py-3 md:px-6 md:py-5">
@@ -151,10 +153,22 @@ function NAVBAR() {
                     ],
                     [
                       Grid2X2,
-                      "Coming Soon",
-                      "Will be available soon ",
-                      null
+                      "Image Convertor",
+                      "Tool for converting images",
+                      "imageconvertor"
                     ],
+                    [
+                      MessageSquareCode,
+                      "Document convertor",
+                      "Tool for conversion of documents",
+                      "documentconvertor",
+                    ],
+                    [
+                      Code2Icon,
+                      "Code Formatter",
+                      "For formatting code",
+                      "codeformatter",
+                    ]
                   ].map(([Icon, title, description,path], index) => (
                  <Link to={`/${path}`}>
                   <div 

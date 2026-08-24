@@ -8,6 +8,9 @@ import {
   BarChart3,
   PenLine,
   CheckCircle2,
+  Code2Icon,
+  MessageSquareCode,
+  WrenchIcon,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -42,6 +45,33 @@ const tools = [
     button: "Audit Now",
     path:"/websiteaudit",
     iconBg: "bg-blue-50",
+  },
+    {
+    number: "04",
+    icon:WrenchIcon,
+    title: "Image Convertor",
+    description:" Tool for converting image online easily",
+    button: "Convert Now",
+    path:"/imageconvertor",
+    iconBg: "bg-blue-50",
+  },
+{
+     number: "05",
+    icon:MessageSquareCode,
+    title: "Document  Convertor",
+    description:" Tool for converting Document online at a ease",
+    button: "Convert DOC Now",
+    path:"/documentconvertor",
+    iconBg: "bg-blue-50", 
+  },
+  {
+     number: "06",
+    icon:Code2Icon,
+    title: "Code Formatter",
+    description:"Tool for formatting code ",
+    button: "Format Code ",
+    path:"/codeformatter",
+    iconBg: "bg-blue-50", 
   },
 ];
 
