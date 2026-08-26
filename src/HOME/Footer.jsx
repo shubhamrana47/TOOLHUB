@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   const sections = [
     {
-      title: "TASKIFY",
+      title: "Toolshubs",
       links: [
         { name: "Home", path: "/" },
         { name: "Features", path: "/features" },
