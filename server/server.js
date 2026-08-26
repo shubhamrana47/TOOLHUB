@@ -29,6 +29,8 @@ app.use(
        "http://localhost:5174",
       "https://toolhub-mauve-two.vercel.app",
       "https://toolhubsite.vercel.app",
+        "https://www.pgiendocrinology.com",
+        "https://pgiendocrinology.com",
     ],
     credentials: true,
   })
