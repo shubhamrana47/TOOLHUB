@@ -1,52 +1,64 @@
 import dotenv from "dotenv";
+import { GoogleGenAI } from "@google/genai";
 
 dotenv.config();
 
 const apiKey = process.env.GEMINI_API_KEY;
+
+const model =
+  process.env.GEMINI_MODEL || "gemini-3.7-flash";
 
 console.log("=================================");
 console.log("GEMINI CONFIG CHECK");
 console.log("Key exists:", !!apiKey);
 console.log("Key length:", apiKey?.length);
 console.log("Key prefix:", apiKey?.substring(0, 4));
+console.log("Model:", model);
 console.log("=================================");
 
 if (!apiKey) {
   throw new Error("GEMINI_API_KEY is missing");
 }
 
-export const generateGeminiContent = async (prompt) => {
-  const response = await fetch(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-goog-api-key": apiKey,
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              {
-                text: prompt,
+const ai = new GoogleGenAI({
+  apiKey,
+});
+
+export const generateGeminiContent = async (
+  prompt,
+  options = {}
+) => {
+  try {
+    const response = await ai.models.generateContent({
+      model: options.model || model,
+      contents: prompt,
+
+      config: {
+        ...(options.thinkingLevel
+          ? {
+              thinkingConfig: {
+                thinkingLevel: options.thinkingLevel,
               },
-            ],
-          },
-        ],
-      }),
-    }
-  );
+            }
+          : {}),
 
-  const data = await response.json();
+        ...(options.responseMimeType
+          ? {
+              responseMimeType: options.responseMimeType,
+            }
+          : {}),
+      },
+    });
 
-  if (!response.ok) {
-    console.error("Gemini API error:", data);
+    return response.text || "";
+  } catch (error) {
+    console.error("=================================");
+    console.error("GEMINI API ERROR");
+    console.error(error);
+    console.error("=================================");
 
     throw new Error(
-      data?.error?.message || "Gemini API request failed"
+      error?.message || "Gemini API request failed"
     );
   }
-
-  return data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
 };

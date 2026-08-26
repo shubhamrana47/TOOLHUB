@@ -9,6 +9,10 @@ export const chatWithGemini = async (req, res) => {
   try {
     const { prompt } = req.body;
 
+    // --------------------------------------------------------
+    // Validate prompt
+    // --------------------------------------------------------
+
     if (!prompt || !prompt.trim()) {
       return res.status(400).json({
         success: false,
@@ -16,21 +20,23 @@ export const chatWithGemini = async (req, res) => {
       });
     }
 
+    const searchQuery = prompt.trim();
+
     console.log("=================================");
     console.log("Generating SEO keywords...");
-    console.log("Search query:", prompt);
+    console.log("Search query:", searchQuery);
     console.log("=================================");
 
+    // --------------------------------------------------------
+    // Short optimized prompt
+    // --------------------------------------------------------
+
     const finalPrompt = `
-You are an expert SEO keyword researcher.
+Generate exactly 6 relevant SEO keywords for:
 
-For the search query:
+"${searchQuery}"
 
-"${prompt.trim()}"
-
-Generate EXACTLY 6 relevant SEO keywords.
-
-Return ONLY valid JSON.
+Return JSON only in this format:
 
 {
   "keywords": [
@@ -45,34 +51,55 @@ Return ONLY valid JSON.
 }
 
 Rules:
-
-- Return exactly 6 keyword objects.
-- Every keyword must be relevant to the search query.
-- searchVolume must be an estimated monthly search volume.
-- seoDifficulty must be a number between 1 and 100.
-- competition must be a number between 0 and 1.
-- cpc must be an estimated CPC in INR.
-- Return ONLY JSON.
-- Do not use Markdown.
-- Do not use code fences.
-- Do not add explanations.
-- Do not add text before or after the JSON.
+- Exactly 6 keyword objects.
+- Keywords must be relevant to the search query.
+- searchVolume = estimated monthly searches.
+- seoDifficulty = number from 1 to 100.
+- competition = number from 0 to 1.
+- cpc = estimated CPC in INR.
+- No markdown.
+- No explanations.
 `;
 
-    const text = await generateGeminiContent(finalPrompt);
+    // --------------------------------------------------------
+    // Generate response
+    // --------------------------------------------------------
 
-    let cleanedText = text
+    const text = await generateGeminiContent(
+      finalPrompt,
+      {
+        thinkingLevel: "low",
+        responseMimeType: "application/json",
+      }
+    );
+
+    // --------------------------------------------------------
+    // Clean response
+    // --------------------------------------------------------
+
+    const cleanedText = text
       .replace(/```json/gi, "")
       .replace(/```/g, "")
       .trim();
+
+    // --------------------------------------------------------
+    // Parse JSON
+    // --------------------------------------------------------
 
     let data;
 
     try {
       data = JSON.parse(cleanedText);
     } catch (parseError) {
-      console.error("Gemini JSON parse error:", parseError);
-      console.error("Gemini returned:", cleanedText);
+      console.error(
+        "Gemini JSON parse error:",
+        parseError
+      );
+
+      console.error(
+        "Gemini returned:",
+        cleanedText
+      );
 
       return res.status(500).json({
         success: false,
@@ -80,8 +107,12 @@ Rules:
       });
     }
 
+    // --------------------------------------------------------
+    // Validate keywords
+    // --------------------------------------------------------
+
     if (
-      !data.keywords ||
+      !data ||
       !Array.isArray(data.keywords)
     ) {
       return res.status(500).json({
@@ -90,10 +121,28 @@ Rules:
       });
     }
 
-    // Make sure exactly 6 are returned
-    const keywords = data.keywords.slice(0, 6);
+    // --------------------------------------------------------
+    // Return exactly 6
+    // --------------------------------------------------------
 
-    console.log("Keywords generated:", keywords.length);
+    const keywords = data.keywords
+      .slice(0, 6)
+      .map((item) => ({
+        keyword: item.keyword || "",
+        searchVolume:
+          Number(item.searchVolume) || 0,
+        seoDifficulty:
+          Number(item.seoDifficulty) || 0,
+        competition:
+          Number(item.competition) || 0,
+        cpc:
+          Number(item.cpc) || 0,
+      }));
+
+    console.log(
+      "Keywords generated:",
+      keywords.length
+    );
 
     return res.status(200).json({
       success: true,
@@ -101,11 +150,16 @@ Rules:
     });
 
   } catch (error) {
-    console.error("Gemini keyword generation error:", error);
+    console.error(
+      "Gemini keyword generation error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
-      message: error.message || "Gemini API failed",
+      message:
+        error.message ||
+        "Gemini API failed",
     });
   }
 };
@@ -153,9 +207,11 @@ export const generateBlog = async (req, res) => {
     // Validate word limit
     // --------------------------------------------------------
 
+    const requestedWordLimit = Number(wordLimit);
+
     if (
-      !wordLimit ||
-      Number(wordLimit) < 100
+      !requestedWordLimit ||
+      requestedWordLimit < 100
     ) {
       return res.status(400).json({
         success: false,
@@ -167,7 +223,10 @@ export const generateBlog = async (req, res) => {
     console.log("Generating blog...");
     console.log("Topic:", topic);
     console.log("Keywords:", keywords);
-    console.log("Word limit:", wordLimit);
+    console.log(
+      "Word limit:",
+      requestedWordLimit
+    );
     console.log("=================================");
 
     // --------------------------------------------------------
@@ -175,9 +234,9 @@ export const generateBlog = async (req, res) => {
     // --------------------------------------------------------
 
     const finalPrompt = `
-You are an expert SEO content writer and SEO strategist.
+You are an expert SEO content writer.
 
-Create a complete SEO-optimized blog based on the information below.
+Create an SEO-optimized blog based on:
 
 TOPIC:
 "${topic.trim()}"
@@ -187,106 +246,74 @@ ${keywords
   .map((keyword) => `- ${keyword}`)
   .join("\n")}
 
-TARGET WORD LIMIT:
-${wordLimit} words
+WORD LIMIT:
+${requestedWordLimit} words
 
+SEO REQUIREMENTS:
 
-IMPORTANT SEO REQUIREMENTS:
-
-- Naturally use the target keywords throughout the blog.
+- Naturally use the target keywords.
 - Do not keyword stuff.
-- Make the content useful, informative, engaging, and easy to read.
-- Use semantic keywords related to the topic.
-- Write an SEO-friendly meta title.
-- Write an SEO-friendly meta description.
+- Make the content useful and informative.
+- Use related semantic keywords.
+- Create an SEO-friendly meta title under 60 characters.
+- Create a meta description between 150-160 characters.
 - Create a short SEO-friendly URL slug.
-- Use proper headings and subheadings.
-- Keep paragraphs short and readable.
-- Include examples where useful.
+- Create an SEO-friendly image prompt.
+- Use clear headings and subheadings.
+- Keep paragraphs short.
+- Include useful examples where appropriate.
 - Do not mention AI or Gemini.
-- Do not include unnecessary explanations.
-- The blog should be approximately ${wordLimit} words.
-- Do not exceed ${wordLimit} words for the BLOG section.
+- Keep the BLOG approximately ${requestedWordLimit} words.
+- Do not exceed ${requestedWordLimit} words for the BLOG.
 
+FORMATTING:
 
-BLOG FORMATTING RULES:
-
-- Do NOT use hashtags (#).
-- Do NOT use Markdown heading syntax.
-- Do NOT use asterisks.
-- Do NOT use Markdown formatting.
-- Write headings as plain text.
-- Keep every heading on its own line.
-- Keep paragraphs separated by blank lines.
-- Use clean plain text.
+- Plain text only.
+- Do not use Markdown.
+- Do not use # symbols.
+- Do not use asterisks.
 - Do not use code fences.
+- Headings must be plain text.
+- Put each heading on its own line.
+- Separate paragraphs with blank lines.
 
-
-RETURN EXACTLY THIS FORMAT:
+RETURN EXACTLY:
 
 META TITLE:
-[SEO-friendly meta title under 60 characters]
+[title]
 
 META DESCRIPTION:
-[SEO-friendly meta description between 150-160 characters]
+[description]
 
 IMAGE PROMPT:
-[SEO-friendly image prompt based on the blog title]
+[image prompt]
 
 URL SLUG:
-[short lowercase SEO-friendly slug using hyphens]
+[slug]
 
 BLOG:
 
-[Blog Title]
+[complete blog]
 
-[Introduction]
+Do not add anything before META TITLE.
 
-First Main Heading
-
-[Content]
-
-Second Main Heading
-
-[Content]
-
-Third Main Heading
-
-[Content]
-
-Additional Heading
-
-[Content]
-
-Conclusion
-
-[Conclusion]
-
-
-IMPORTANT:
-
-- Return ONLY:
-  META TITLE
-  META DESCRIPTION
-  IMAGE PROMPT
-  URL SLUG
-  BLOG
-
-- Do not return JSON.
-- Do not use Markdown code fences.
-- Do not add explanations before META TITLE.
-- Do not add explanations after BLOG.
-- Do not use #, ##, ###, *, or other Markdown symbols.
-- BLOG must contain the complete article.
+Do not add anything after the BLOG.
 `;
 
     // --------------------------------------------------------
     // Generate blog
     // --------------------------------------------------------
 
-    const blog = await generateGeminiContent(finalPrompt);
+    const blog = await generateGeminiContent(
+      finalPrompt,
+      {
+        thinkingLevel: "medium",
+      }
+    );
 
-    console.log("Blog generated successfully");
+    console.log(
+      "Blog generated successfully"
+    );
 
     return res.status(200).json({
       success: true,
@@ -294,11 +321,16 @@ IMPORTANT:
     });
 
   } catch (error) {
-    console.error("Blog generation error:", error);
+    console.error(
+      "Blog generation error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
-      message: error.message || "Blog generation failed",
+      message:
+        error.message ||
+        "Blog generation failed",
     });
   }
 };
