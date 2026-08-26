@@ -1,49 +1,85 @@
-import { User } from "lucide-react"
 import bcrypt from "bcrypt";
-export const signup=async (req,res)=>{
-    try {
-        
-          const {name,email,password,confirmPassword}=req.body;
-           
-          if(!name || !email || !password){
-            return res.status(400).json({
-                success:false,
+import { User } from "../models/User.js";
 
-                message:"Please fill all the required details"
-            })
-          }
+export const signup = async (req, res) => {
+  try {
+    console.log("Signup body:", req.body);
 
-          if(password!==confirmPassword){
-            return res.status(400).json({
-                success:false,
-                message:"Both the passwords must be same "
-            })
-          }
-         
-          const existingUser=User.findOne({
-            email:email.toLowerCase(),
-          });
-          if(existingUser){
-            return res.status(400).json({
-              success:false,
-              message:"user already exists ",
-            })
-          }
+    const {
+      name,
+      email,
+      password,
+      confirmPassword,
+    } = req.body;
 
+    // ==============================
+    // VALIDATION
+    // ==============================
 
-          //paassword ko hash kra 
-           const hashedPassword=await bcrypt.hash(password,10);
+    if (
+      !name ||
+      !email ||
+      !password ||
+      !confirmPassword
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Please fill all the required details",
+      });
+    }
 
-          ///creating userrrr
-        
-          const user=User.create({
-            name:name,
-            email:email,
-            password:hashedPassword,
-          })
-         
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Both passwords must be the same",
+      });
+    }
 
-       return res.status(201).json({
+    // ==============================
+    // NORMALIZE EMAIL
+    // ==============================
+
+    const normalizedEmail =
+      email.trim().toLowerCase();
+
+    // ==============================
+    // CHECK EXISTING USER
+    // ==============================
+
+    const existingUser =
+      await User.findOne({
+        email: normalizedEmail,
+      });
+
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: "User already exists",
+      });
+    }
+
+    // ==============================
+    // HASH PASSWORD
+    // ==============================
+
+    const hashedPassword =
+      await bcrypt.hash(password, 10);
+
+    // ==============================
+    // CREATE USER
+    // ==============================
+
+    const user = await User.create({
+      name: name.trim(),
+      email: normalizedEmail,
+      password: hashedPassword,
+    });
+
+    // ==============================
+    // RESPONSE
+    // ==============================
+
+    return res.status(201).json({
       success: true,
       message: "Signup successful. Please login.",
       user: {
@@ -53,13 +89,15 @@ export const signup=async (req,res)=>{
       },
     });
 
-    } catch (error) {
-        console.log("error aagay bhai ",);
-        console.error(error);
-        return res.json({
-          success:false,
-          message:"problem occured during signup"
-        })
-    }
-}
+  } catch (error) {
+    console.error(
+      "Signup error:",
+      error
+    );
 
+    return res.status(500).json({
+      success: false,
+      message: "Problem occurred during signup",
+    });
+  }
+};
