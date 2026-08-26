@@ -1,16 +1,9 @@
 import fs from "fs";
 import path from "path";
-import * as archiverModule from "archiver";
+import { ZipArchive } from "archiver";
 
 import { createPluginFiles } from "../services/pluginGenerator.js";
 import { createSlug } from "../utils/pluginHelpers.js";
-
-// =========================================================
-// ARCHIVER
-// =========================================================
-
-const archiver =
-  archiverModule.default || archiverModule;
 
 // =========================================================
 // DOWNLOAD DIRECTORY
@@ -63,8 +56,7 @@ export const analyzePlugin = (req, res) => {
     ) {
       return res.status(400).json({
         success: false,
-        message:
-          "Plugin requirement is required",
+        message: "Plugin requirement is required",
       });
     }
 
@@ -115,7 +107,7 @@ export const analyzePlugin = (req, res) => {
 };
 
 // =========================================================
-// GENERATE PLUGIN
+// GENERATE WORDPRESS PLUGIN
 // =========================================================
 
 export const generatePlugin = async (
@@ -124,6 +116,10 @@ export const generatePlugin = async (
 ) => {
 
   try {
+
+    // =====================================================
+    // GET REQUEST DATA
+    // =====================================================
 
     const {
       pluginName,
@@ -142,6 +138,16 @@ export const generatePlugin = async (
     console.log(
       "Plugin Name:",
       pluginName
+    );
+
+    console.log(
+      "Requirement:",
+      requirement
+    );
+
+    console.log(
+      "Features:",
+      features
     );
 
     console.log(
@@ -187,7 +193,9 @@ export const generatePlugin = async (
     // =====================================================
 
     const slug =
-      createSlug(pluginName);
+      createSlug(
+        String(pluginName).trim()
+      );
 
     console.log(
       "Plugin slug:",
@@ -195,20 +203,37 @@ export const generatePlugin = async (
     );
 
     // =====================================================
+    // VALIDATE SLUG
+    // =====================================================
+
+    if (!slug) {
+
+      return res.status(400).json({
+        success: false,
+        message:
+          "Invalid plugin name",
+      });
+
+    }
+
+    // =====================================================
     // CREATE PLUGIN FILES
     // =====================================================
 
     const pluginFiles =
       createPluginFiles(
-        pluginName,
-        requirement,
+        String(pluginName).trim(),
+        String(requirement).trim(),
         Array.isArray(features)
           ? features
           : []
       );
 
     console.log(
-      "Plugin files created:",
+      "Plugin files created:"
+    );
+
+    console.log(
       Object.keys(pluginFiles)
     );
 
@@ -222,6 +247,11 @@ export const generatePlugin = async (
         `${slug}.zip`
       );
 
+    console.log(
+      "ZIP path:",
+      zipPath
+    );
+
     // =====================================================
     // REMOVE OLD ZIP
     // =====================================================
@@ -230,11 +260,22 @@ export const generatePlugin = async (
       fs.existsSync(zipPath)
     ) {
 
-      fs.unlinkSync(zipPath);
+      try {
 
-      console.log(
-        "Old ZIP removed"
-      );
+        fs.unlinkSync(zipPath);
+
+        console.log(
+          "Old ZIP removed"
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Could not remove old ZIP:",
+          error
+        );
+
+      }
 
     }
 
@@ -248,21 +289,19 @@ export const generatePlugin = async (
       );
 
     // =====================================================
-    // CREATE ARCHIVE
+    // CREATE ZIP ARCHIVE
+    // ARCHIVER 8.x API
     // =====================================================
 
     const archive =
-      archiver(
-        "zip",
-        {
-          zlib: {
-            level: 9,
-          },
-        }
-      );
+      new ZipArchive({
+        zlib: {
+          level: 9,
+        },
+      });
 
     // =====================================================
-    // OUTPUT ERROR
+    // OUTPUT STREAM ERROR
     // =====================================================
 
     output.on(
@@ -274,7 +313,9 @@ export const generatePlugin = async (
           error
         );
 
-        if (!res.headersSent) {
+        if (
+          !res.headersSent
+        ) {
 
           return res.status(500).json({
             success: false,
@@ -300,7 +341,9 @@ export const generatePlugin = async (
           error
         );
 
-        if (!res.headersSent) {
+        if (
+          !res.headersSent
+        ) {
 
           return res.status(500).json({
             success: false,
@@ -314,6 +357,22 @@ export const generatePlugin = async (
     );
 
     // =====================================================
+    // ZIP WARNING
+    // =====================================================
+
+    archive.on(
+      "warning",
+      (warning) => {
+
+        console.warn(
+          "Archive warning:",
+          warning
+        );
+
+      }
+    );
+
+    // =====================================================
     // ZIP COMPLETE
     // =====================================================
 
@@ -321,58 +380,87 @@ export const generatePlugin = async (
       "close",
       () => {
 
-        const size =
-          archive.pointer();
+        try {
 
-        console.log(
-          "================================="
-        );
+          const size =
+            archive.pointer();
 
-        console.log(
-          "ZIP created successfully"
-        );
+          console.log(
+            "================================="
+          );
 
-        console.log(
-          "ZIP:",
-          zipPath
-        );
+          console.log(
+            "ZIP created successfully"
+          );
 
-        console.log(
-          "Size:",
-          size,
-          "bytes"
-        );
+          console.log(
+            "ZIP:",
+            zipPath
+          );
 
-        console.log(
-          "Files:",
-          Object.keys(
-            pluginFiles
-          ).length
-        );
-
-        console.log(
-          "================================="
-        );
-
-        if (!res.headersSent) {
-
-          return res.json({
-
-            success: true,
-
-            message:
-              "WordPress plugin generated successfully",
-
-            downloadUrl:
-              `/downloads/${slug}.zip`,
-
-            fileCount:
-              Object.keys(
-                pluginFiles
-              ).length,
-
+          console.log(
+            "Size:",
             size,
-          });
+            "bytes"
+          );
+
+          console.log(
+            "Files:",
+            Object.keys(
+              pluginFiles
+            ).length
+          );
+
+          console.log(
+            "================================="
+          );
+
+          if (
+            !res.headersSent
+          ) {
+
+            return res.json({
+
+              success: true,
+
+              message:
+                "WordPress plugin generated successfully",
+
+              downloadUrl:
+                `/downloads/${slug}.zip`,
+
+              fileCount:
+                Object.keys(
+                  pluginFiles
+                ).length,
+
+              size,
+
+            });
+
+          }
+
+        } catch (error) {
+
+          console.error(
+            "ZIP completion error:",
+            error
+          );
+
+          if (
+            !res.headersSent
+          ) {
+
+            return res.status(500).json({
+
+              success: false,
+
+              message:
+                "Plugin ZIP completed but response failed",
+
+            });
+
+          }
 
         }
 
@@ -383,16 +471,23 @@ export const generatePlugin = async (
     // CONNECT ARCHIVE TO OUTPUT
     // =====================================================
 
-    archive.pipe(output);
+    archive.pipe(
+      output
+    );
 
     // =====================================================
-    // ADD FILES TO ZIP
+    // ADD PLUGIN FILES TO ZIP
     // =====================================================
 
     Object.entries(
       pluginFiles
     ).forEach(
       ([filePath, content]) => {
+
+        console.log(
+          "Adding file:",
+          filePath
+        );
 
         archive.append(
           content,
@@ -408,6 +503,10 @@ export const generatePlugin = async (
     // FINALIZE ZIP
     // =====================================================
 
+    console.log(
+      "Finalizing ZIP..."
+    );
+
     await archive.finalize();
 
   } catch (error) {
@@ -417,7 +516,10 @@ export const generatePlugin = async (
     );
 
     console.error(
-      "Plugin generation error:",
+      "Plugin generation error:"
+    );
+
+    console.error(
       error
     );
 
@@ -425,7 +527,9 @@ export const generatePlugin = async (
       "================================="
     );
 
-    if (!res.headersSent) {
+    if (
+      !res.headersSent
+    ) {
 
       return res.status(500).json({
 

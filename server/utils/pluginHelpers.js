@@ -2,52 +2,56 @@
 // CREATE SLUG
 // =========================================================
 
-export function createSlug(name) {
-  return String(name || "custom-plugin")
+export const createSlug = (name = "") => {
+  return String(name)
     .toLowerCase()
     .trim()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
-}
+};
 
 // =========================================================
-// SAFE PHP FUNCTION NAME
+// SAFE PHP FUNCTION / CLASS NAME
 // =========================================================
 
-export function safeFunctionName(name) {
-  let slug = createSlug(name)
-    .replace(/-/g, "_");
+export const safeFunctionName = (name = "") => {
+  let value = String(name)
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
 
-  if (!slug) {
-    slug = "custom_plugin";
+  if (!value) {
+    value = "wp_ai_plugin";
   }
 
-  if (/^[0-9]/.test(slug)) {
-    slug = "plugin_" + slug;
+  if (/^[0-9]/.test(value)) {
+    value = `plugin_${value}`;
   }
 
-  return slug;
-}
+  return `wpai_${value}`;
+};
 
 // =========================================================
 // ESCAPE PHP
 // =========================================================
 
-export function escapePHP(value) {
-  return String(value || "")
+export const escapePHP = (value = "") => {
+  return String(value)
     .replace(/\\/g, "\\\\")
-    .replace(/'/g, "\\'");
-}
+    .replace(/'/g, "\\'")
+    .replace(/\r?\n/g, " ");
+};
 
 // =========================================================
 // ESCAPE HTML
 // =========================================================
 
-export function escapeHTML(value) {
-  return String(value || "")
+export const escapeHTML = (value = "") => {
+  return String(value)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
-}
+};

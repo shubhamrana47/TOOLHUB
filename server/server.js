@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-
+import path from "path";
 import geminiRoutes from "./routes/geminiRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
@@ -65,6 +65,12 @@ app.use(
   reviewRoutes
 );
 
+app.use(
+  "/downloads",
+  express.static(
+    path.join(process.cwd(), "downloads")
+  )
+);
 // GEMINI
 app.use(
   "/api/gemini",
@@ -112,15 +118,9 @@ app.use((req, res) => {
   });
 });
 
-// =========================================================
-// DATABASE
-// =========================================================
 
 connectDB();
 
-// =========================================================
-// SERVER
-// =========================================================
 
 const PORT = process.env.PORT || 5000;
 
