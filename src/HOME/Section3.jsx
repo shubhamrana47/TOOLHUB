@@ -1,35 +1,39 @@
 const Section3 = () => {
   const features = [
     {
-      title: "Use the AI you already pay for",
-      desc: "Connect Claude, ChatGPT or any MCP-compatible client. wptaskify gives it 280 tools to run your site - you keep using your own AI, so there's no second AI subscription.",
+      title: "Access Powerful Tools Instantly",
+      desc: "No complicated software or technical setup. Choose your tool, enter your input, and get instant results.",
+      tag: "Easy · Fast · Online",
       icon: "💬",
     },
     {
-      title: "Never stare at a blank page again",
-      desc: "Ask your AI to write a complete, SEO-ready article or product description in your voice - with images and schema - and it publishes straight to your WordPress site or store.",
-      tag: "Content · SEO · Images",
+      title: "Create More in Less Time",
+      desc: "Generate, edit, convert, optimize, and manage digital content with simple tools designed to save time.",
+      tag: "Content · Text · Images",
       icon: "✎",
     },
     {
-      title: "Know why a post isn't ranking – and fix it in a click",
-      desc: "The AI SEO Score checks On-Page, Technical, AEO and GEO, then fixes meta, content and broken links automatically.",
-      tag: "On-Page · Technical · AEO · GEO",
+      title: "Improve Your SEO & Website Performance",
+      desc: "Analyze URLs, generate metadata, check performance, optimize content, and improve your online presence.",
+      tag: "SEO · Website · Optimization",
       icon: "✓",
     },
     {
-      title: "Stop hunting for images",
-      desc: "Generate realistic, on-topic featured images automatically and set them on your posts - no stock photos or design tools needed.",
+      title: "Convert & Manage Your Files",
+      desc: "Convert, compress, merge, edit, and manage images, PDFs, documents, and other files without complicated software.",
+      tag: "PDF · Images · Converters",
       icon: "⊕",
     },
     {
-      title: "Set it and forget it safely",
-      desc: "Nothing goes live without you. We wait for your actions.",
+      title: "Create Without Limits",
+      desc: "Generate QR codes, create content, edit images, work with text, and access useful productivity tools.",
+      tag: "Creative · Productivity · Utilities",
       icon: "💬",
     },
     {
-      title: "Run your store from AI too",
-      desc: "On WooCommerce, your AI handles your products, orders, inventory, collections, coupons, customers and many more.",
+      title: "One Hub for Every Task",
+      desc: "From developers and marketers to students and business owners, ToolsHubs gives you the right tool for every task.",
+      tag: "Simple tools · Powerful results",
       icon: "✓",
     },
   ];
@@ -37,55 +41,50 @@ const Section3 = () => {
   return (
     <div className="bg-white">
 
-      {/* =================================================
-          SECTION HEADING
-      ================================================= */}
+      {/* ================= SECTION HEADER ================= */}
 
-      <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-5 px-5 pt-16 text-center sm:px-8 sm:pt-20 md:pt-24">
+      <div className="mx-auto flex w-full max-w-6xl flex-col items-center px-5 pt-14 text-center sm:px-6 sm:pt-16 md:pt-20">
 
         {/* BADGE */}
 
-        <p
+        <span
           className="
             rounded-full
             bg-blue-600
-            px-5
-            py-2.5
-            text-sm
+            px-4
+            py-2
+            text-xs
             font-extrabold
             uppercase
-            tracking-[0.2em]
+            tracking-[0.18em]
             text-white
             shadow-sm
-            sm:px-6
-            sm:py-3
-            sm:text-base
+            sm:px-5
+            sm:text-sm
           "
         >
           CAPABILITIES
-        </p>
+        </span>
 
-        {/* MAIN HEADING */}
+        {/* HEADING */}
 
         <h2
           className="
-            mx-auto
-            max-w-6xl
-            text-4xl
+            mt-5
+            max-w-4xl
+            text-3xl
             font-black
-            leading-[1.05]
-            tracking-[-1.5px]
+            leading-tight
+            tracking-tight
             text-gray-950
-            sm:text-3xl
-            md:text-4xl
-            lg:text-5xl
-            xl:text-[60px]
-            xl:tracking-[-3px]
+            sm:text-4xl
+            md:text-5xl
+            lg:text-[52px]
           "
         >
-          Everything your site and store need,
-          <span className="text-blue-600">
-            {" "}powered by AI.
+          Everything you need.
+          <span className="block text-blue-600">
+            All the tools in one hub.
           </span>
         </h2>
 
@@ -93,87 +92,124 @@ const Section3 = () => {
 
         <p
           className="
-            mx-auto
-            max-w-4xl
-            text-base
-            font-bold
-            leading-7
+            mt-5
+            max-w-3xl
+            text-sm
+            font-medium
+            leading-6
             text-gray-600
-            sm:text-lg
-            sm:leading-8
-            md:text-xl
-            md:leading-9
-            lg:text-2xl
-            lg:leading-10
+            sm:text-base
+            sm:leading-7
+            md:text-lg
+            md:leading-8
           "
         >
-          280 tools let your own AI turn a single message
-          into real, published changes on your live
-          WordPress site, WooCommerce or Shopify store.
+          ToolsHubs brings together powerful online tools for SEO, images,
+          PDFs, text, developers, calculators, converters, and everyday
+          digital tasks — all in one place.
         </p>
-
       </div>
 
-      {/* =================================================
-          FEATURES GRID
-      ================================================= */}
+      {/* ================= FEATURES ================= */}
 
-      <section className="mx-auto w-full max-w-7xl px-5 py-12 sm:px-8 sm:py-16 md:py-20">
+      <section
+        className="
+          mx-auto
+          w-full
+          max-w-6xl
+          px-5
+          py-10
+          sm:px-6
+          sm:py-12
+          md:py-16
+        "
+      >
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <div
+          className="
+            grid
+            grid-cols-1
+            gap-4
+            sm:grid-cols-2
+            lg:grid-cols-3
+          "
+        >
 
           {features.map((item, index) => (
-            <div
+            <article
               key={index}
               className="
-                rounded-3xl
+                group
+                flex
+                flex-col
+                rounded-2xl
                 border
                 border-gray-200
                 bg-white
-                p-6
+                p-5
                 shadow-sm
                 transition-all
                 duration-300
                 hover:-translate-y-1
                 hover:border-blue-200
-                hover:shadow-xl
-                sm:p-7
-                md:p-8
+                hover:shadow-lg
+                sm:p-6
               "
             >
 
-              {/* ICON */}
+              {/* TOP ROW */}
 
-              <div
-                className="
-                  mb-5
-                  flex
-                  h-12
-                  w-12
-                  items-center
-                  justify-center
-                  rounded-xl
-                  border
-                  border-blue-200
-                  bg-blue-50
-                  text-xl
-                  text-blue-600
-                "
-              >
-                {item.icon}
+              <div className="flex items-center justify-between">
+
+                {/* ICON */}
+
+                <div
+                  className="
+                    flex
+                    h-10
+                    w-10
+                    shrink-0
+                    items-center
+                    justify-center
+                    rounded-xl
+                    border
+                    border-blue-100
+                    bg-blue-50
+                    text-lg
+                    text-blue-600
+                    transition-transform
+                    duration-300
+                    group-hover:scale-105
+                  "
+                >
+                  {item.icon}
+                </div>
+
+                {/* NUMBER */}
+
+                <span
+                  className="
+                    text-xs
+                    font-bold
+                    text-gray-300
+                  "
+                >
+                  0{index + 1}
+                </span>
+
               </div>
 
               {/* TITLE */}
 
               <h3
                 className="
-                  mb-3
-                  text-xl
+                  mt-4
+                  text-lg
                   font-extrabold
-                  leading-7
+                  leading-6
                   text-gray-900
-                  sm:text-2xl
-                  sm:leading-8
+                  sm:text-xl
+                  sm:leading-7
                 "
               >
                 {item.title}
@@ -183,12 +219,11 @@ const Section3 = () => {
 
               <p
                 className="
+                  mt-2
                   text-sm
                   font-medium
-                  leading-7
+                  leading-6
                   text-gray-500
-                  sm:text-base
-                  sm:leading-8
                 "
               >
                 {item.desc}
@@ -196,32 +231,30 @@ const Section3 = () => {
 
               {/* TAG */}
 
-              {item.tag && (
+              <div className="mt-4">
                 <span
                   className="
-                    mt-5
-                    inline-block
+                    inline-flex
                     rounded-full
                     bg-blue-50
                     px-3
-                    py-1.5
-                    text-xs
+                    py-1
+                    text-[11px]
                     font-bold
                     text-blue-600
-                    sm:text-sm
+                    sm:text-xs
                   "
                 >
                   {item.tag}
                 </span>
-              )}
+              </div>
 
-            </div>
+            </article>
           ))}
 
         </div>
 
       </section>
-
     </div>
   );
 };

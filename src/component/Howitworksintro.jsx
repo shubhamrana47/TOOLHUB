@@ -8,18 +8,18 @@ import {
 
 const data = [
   {
-    title: "Connect your site or store",
-    desc: "WordPress: install the free wptaskify plugin and click Connect. Shopify: paste your store domain and access token. It's validated and encrypted instantly.",
+    title: "Choose Your Tool",
+    desc: "Explore our collection of powerful online tools for SEO, images, PDFs, text, developers, calculators, converters, and much more.",
     icon: Plug,
   },
   {
-    title: "Connect your AI",
-    desc: "Add your wptaskify MCP link to Claude Desktop, ChatGPT or any MCP client. Your site and store's 280 tools instantly appear inside your own AI — you keep using the AI you already pay for.",
+    title: "Enter your input",
+    desc: "Simply upload your file, paste your text, enter a URL, or provide the information required by the tool.",
     icon: Bot,
   },
   {
-    title: "Just ask",
-    desc: "Say write an SEO article about X and publish it or add this product and write its description. Your AI does it through the tools — generates images, fixes SEO, and publishes live.",
+    title: " Get Instant Results",
+    desc: "Our tools process your request and deliver results within seconds Download, copy, convert, optimize, generate, or use your result instantly — all in one place.",
     icon: MessageCircle,
   },
 ];
@@ -71,10 +71,10 @@ const Howitworksintro = () => {
         </h2>
 
         <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-gray-500 md:text-lg">
-          No new AI subscription, no code.
-          <span className="font-semibold text-gray-700">
-            {" "}Connect once and your own AI gets 280 tools.
-          </span>
+           No complicated setup. No coding required.
+         <div className="font-semibold text-gray-700">
+            {" "}Choose a tool, enter your details, and get results instantly. 
+          </div>
         </p>
       </motion.div>
 

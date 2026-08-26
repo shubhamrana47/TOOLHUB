@@ -4,8 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../redux/slice/authslice";
 import { toast } from "react-toastify";
 import logo from "../assets/logo.jpg";
-
+import logo8 from "../assets/logo8.png";
 import {
+  Search,
   Home,
   Grid2X2,
   Tag,
@@ -62,9 +63,9 @@ function NAVBAR() {
           >
             {/* If your logo.jpg contains the complete logo */}
             <img
-              src={logo}
-              alt="Pingaksho Toolhub"
-              className="h-12 w-auto object-contain"
+              src={logo8}
+              alt=" Toolshubs"
+              className="h-24 w-auto object-contain"
             />
           </button>
 
@@ -97,122 +98,214 @@ function NAVBAR() {
               </button>
 
               {/* SERVICES DROPDOWN */}
-              <div
-                className="
-                  invisible
-                  absolute
-                  left-1/2
-                  top-[65px]
-                  z-50
-                  w-[620px]
-                  -translate-x-1/2
-                  translate-y-2
-                  rounded-3xl
-                  border
-                  border-blue-100
-                  bg-white
-                  p-6
-                  opacity-0
-                  shadow-[0_20px_60px_rgba(37,99,235,0.15)]
-                  transition-all
-                  duration-300
-                  group-hover:visible
-                  group-hover:translate-y-0
-                  group-hover:opacity-100
-                "
-              >
-                <div className="mb-5 border-b border-gray-100 pb-4">
-                  <p className="text-xs font-bold tracking-[3px] text-gray-400">
-                    SERVICES
-                  </p>
+    <div
+  className="
+    invisible
+    absolute
+    
+    top-[65px]
+    left-[185px]
+    z-50
+    w-[900px]
+    max-w-[calc(100vw-30px)]
+    -translate-x-1/2
+    translate-y-2
+    rounded-2xl
+    border
+    border-gray-200
+    bg-white
+    p-5
+    opacity-0
+    shadow-[0_20px_60px_rgba(37,99,235,0.15)]
+    transition-all
+    duration-300
+    group-hover:visible
+    group-hover:translate-y-0
+    group-hover:opacity-100
+  "
+>
+  <div className="grid grid-cols-6 gap-6">
 
-                  <p className="mt-1 text-sm text-gray-500">
-                    Professional AI and digital solutions
-                  </p>
-                </div>
+    {/* AI & Search */}
+    <div>
+      <div className="mb-4 flex items-center gap-2">
+        <div
+          className="
+            flex h-7 w-7 items-center justify-center
+            rounded-lg
+            border border-blue-100
+            bg-blue-50
+            text-blue-500
+          "
+        >
+          <Search size={15} />
+        </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    [
-                      FileText,
-                      "Search Keywords",
-                      "Done-for-you AI articles and web app",
-                      "geminiResponse"
-                    ],
-                    [
-                      Rocket,
-                      "Create a blog",
-                      "Try out our new feature ",
-                      "blog"
-                    ],
-                    [
-                      Wrench,
-                      "Website Audit ",
-                      "Tool for auditing your website",
-                      "websiteaudit"
-                    ],
-                    [
-                      Grid2X2,
-                      "Image Convertor",
-                      "Tool for converting images",
-                      "imageconvertor"
-                    ],
-                    [
-                      MessageSquareCode,
-                      "Document convertor",
-                      "Tool for conversion of documents",
-                      "documentconvertor",
-                    ],
-                    [
-                      Code2Icon,
-                      "Code Formatter",
-                      "For formatting code",
-                      "codeformatter",
-                    ]
-                  ].map(([Icon, title, description,path], index) => (
-                 <Link to={`/${path}`}>
-                  <div 
-                      key={index}
-                      className="
-                        flex
-                        gap-4
-                        rounded-2xl
-                        p-4
-                        transition
-                        hover:bg-blue-50
-                      "
-                    >
-                      <div 
-                        className="
-                          flex
-                          h-11
-                          w-11
-                          shrink-0
-                          items-center
-                          justify-center
-                          rounded-xl
-                          bg-blue-50
-                          text-blue-600
-                        "
-                      >
-                        <Icon size={21} />
-                      </div>
+        <h3 className="text-sm font-semibold text-gray-800">
+          Seo Tools
+        </h3>
+      </div>
 
-                      <div>
-                        <h3 className="font-semibold text-gray-900">
-                          {title}
-                        </h3>
+      <div className="space-y-3">
+        <Link
+          to="/geminiResponse"
+          className="block text-sm text-gray-500 transition hover:text-blue-500"
+        >
+          Search Keywords
+        </Link>
+      </div>
+      <div className="space-y-3">
+        <Link
+          to="/blog"
+          className="block text-sm text-gray-500 transition hover:text-blue-500"
+        >
+          Create a Blog
+        </Link>
+      </div>
+       <div className="space-y-3">
+        <Link
+          to="/websiteaudit"
+          className="block text-sm text-gray-500 transition hover:text-blue-500"
+        >
+          Website Audit 
+        </Link>
+      </div>
+    </div>
 
-                        <p className="mt-1 text-sm leading-5 text-gray-500">
-                          {description}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                    
-                  ))}
-                </div>
-              </div>
+    {/* Content & Blog */}
+    <div>
+      <div className="mb-4 flex items-center gap-2">
+        <div
+          className="
+            flex h-7 w-7 items-center justify-center
+            rounded-lg
+            border border-blue-100
+            bg-blue-50
+            text-blue-500
+          "
+        >
+          <Rocket size={15} />
+        </div>
+
+        <h3 className="text-sm font-semibold text-gray-800">
+         Website Tools
+        </h3>
+      </div>
+
+      <div className="space-y-3">
+        <Link
+          to="/wpplugin"
+          className="block text-sm text-gray-500 transition hover:text-blue-500"
+        >
+          Create WPPlugins
+        </Link>
+      </div>
+      <div className="space-y-3">
+        <Link
+          to="/codeformatter"
+          className="block text-sm text-gray-500 transition hover:text-blue-500"
+        >
+         Code Formatter 
+        </Link>
+      </div>
+    </div>
+
+    {/* Website & SEO */}
+    <div>
+      <div className="mb-4 flex items-center gap-2">
+        <div
+          className="
+            flex h-7 w-7 items-center justify-center
+            rounded-lg
+            border border-blue-100
+            bg-blue-50
+            text-blue-500
+          "
+        >
+          <Wrench size={15} />
+        </div>
+
+        <h3 className="text-sm font-semibold text-gray-800">
+          Document Tools
+        </h3>
+      </div>
+
+      <div className="space-y-3">
+        <Link
+          to="/documentconvertor"
+          className="block text-sm text-gray-500 transition hover:text-blue-500"
+        >
+          Document Convertor 
+        </Link>
+      </div>
+    </div>
+
+    {/* Image Tools */}
+    <div>
+      <div className="mb-4 flex items-center gap-2">
+        <div
+          className="
+            flex h-7 w-7 items-center justify-center
+            rounded-lg
+            border border-blue-100
+            bg-blue-50
+            text-blue-500
+          "
+        >
+          <Grid2X2 size={15} />
+        </div>
+
+        <h3 className="text-sm font-semibold text-gray-800">
+          Image Tool
+        </h3>
+      </div>
+
+      <div className="space-y-3">
+        <Link
+          to="/imageconvertor"
+          className="block text-sm text-gray-500 transition hover:text-blue-500"
+        >
+          Image Converter
+        </Link>
+      </div>
+    </div>
+
+    
+
+   
+
+  </div>
+
+  {/* Bottom CTA */}
+  <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
+    <div>
+      <p className="text-sm font-semibold text-gray-800">
+        Not sure which tool you need?
+      </p>
+
+      <p className="mt-1 text-xs text-gray-500">
+        Explore all our AI-powered tools and productivity solutions.
+      </p>
+    </div>
+
+    <Link
+      to="/features"
+      className="
+        rounded-lg
+        bg-blue-500
+        px-5
+        py-2
+        text-sm
+        font-semibold
+        text-white
+        transition
+        hover:bg-blue-600
+      "
+    >
+      View All Tools →
+    </Link>
+  </div>
+</div>
             </div>
 
             {/* PRICING */}

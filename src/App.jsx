@@ -24,6 +24,7 @@ import ImageConvertorPage from "./pages/ImageConvertorPage";
 import DocumentConvertorPage from "./pages/DocumentConvertorPage";
 import CodeFormatter from "./component/CodeFormatter";
 import CodeFormatterPage from "./pages/CodeFormatterPage";
+import Pluginpage from "./pages/Pluginpage";
 function App() {
   return (
     <div className="w-full h-full">
@@ -62,6 +63,13 @@ function App() {
            <GEMINIRESPONSE/>
             </ProtectedRoute>
 }/>
+
+           <Route path="/wpplugin" element={<ProtectedRoute>
+            <Pluginpage/>
+           </ProtectedRoute>}>
+
+           </Route>
+
 
            <Route  path="/websiteaudit" element={<ProtectedRoute>
             <Websiteauditpage/>

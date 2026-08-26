@@ -50,10 +50,10 @@ const Section2 = () => {
             text-blue-600
           "
         >
-          Powerful Features
+          {/* Powerful Features */}
         </motion.p>
 
-        <h2
+        {/* <h2
   className="
     mt-3 mx-auto
     max-w-[1000px]
@@ -76,12 +76,12 @@ const Section2 = () => {
   >
     In One Place
   </span>
-</h2>
+</h2> */}
 
-        <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-gray-500 md:text-base">
+        {/* <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-gray-500 md:text-base">
           Powerful AI and SEO tools designed to make your workflow
           faster, smarter and easier.
-        </p>
+        </p> */}
       </motion.div>
 
       {/* =========================
