@@ -1,13 +1,13 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../redux/slice/authslice";
 import { toast } from "react-toastify";
-import logo from "../assets/logo.jpg";
+
 import logo8 from "../assets/logo8.png";
+
 import {
   Search,
-  Home,
   Grid2X2,
   Tag,
   Rocket,
@@ -17,12 +17,8 @@ import {
   Menu,
   X,
   Wrench,
-  CircleUserRound,
   UserRound,
-  MessageSquareCode,
-  Code2Icon,
 } from "lucide-react";
-import Footer from "./Footer";
 
 function NAVBAR() {
   const navigate = useNavigate();
@@ -31,51 +27,133 @@ function NAVBAR() {
   const { token } = useSelector((state) => state.auth);
 
   const [mobileMenu, setMobileMenu] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // ============================================================
+  // SCROLL DETECTION
+  // ============================================================
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  // ============================================================
+  // LOGOUT
+  // ============================================================
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+    setMobileMenu(false);
+    toast.info("Logged out successfully");
+  };
 
   return (
     <>
-        
-             
+      {/* ========================================================
+          NAVBAR
+      ======================================================== */}
 
-      {/* ================= NAVBAR ================= */}
-      <header className="w-full bg-white px-3 py-3 md:px-6 md:py-5">
+      <header
+        className={`
+          sticky
+          top-0
+          z-50
+          w-full
+          bg-white
+          px-3
+          transition-all
+          duration-300
+          ease-in-out
+          md:px-6
+
+          ${
+            scrolled
+              ? "py-2 shadow-md"
+              : "py-3 shadow-sm md:py-5"
+          }
+        `}
+      >
+        {/* ======================================================
+            NAVBAR CONTAINER
+        ====================================================== */}
+
         <div
-          className="
+          className={`
             mx-auto
             flex
-            min-h-[72px]
             w-full
             items-center
             justify-between
             rounded-[28px]
             border
-            border-gray-100
             bg-white
             px-5
-            shadow-[0_10px_35px_rgba(37,99,235,0.10)]
+            transition-all
+            duration-300
+            ease-in-out
             md:px-8
-          "
+
+            ${
+              scrolled
+                ? "min-h-[64px] border-blue-100 shadow-[0_8px_25px_rgba(37,99,235,0.12)]"
+                : "min-h-[72px] border-gray-100 shadow-[0_10px_35px_rgba(37,99,235,0.10)]"
+            }
+          `}
         >
-          {/* ================= LOGO ================= */}
+
+          {/* ====================================================
+              LOGO
+          ==================================================== */}
+
           <button
             onClick={() => navigate("/")}
-            className="flex shrink-0 items-center bg-transparent"
+            className="
+              flex
+              shrink-0
+              items-center
+              bg-transparent
+            "
           >
-            {/* If your logo.jpg contains the complete logo */}
             <img
               src={logo8}
-              alt=" Toolshubs"
-              className="h-24 w-auto object-contain"
+              alt="Toolshubs"
+              className={`
+                w-auto
+                object-contain
+                transition-all
+                duration-300
+
+                ${
+                  scrolled
+                    ? "h-20"
+                    : "h-24"
+                }
+              `}
             />
           </button>
 
-          {/* ================= DESKTOP NAVIGATION ================= */}
-          <nav className="hidden items-center gap-2 lg:flex">
-            {/* PRODUCT */}
-          
 
-            {/* SERVICES */}
+          {/* ====================================================
+              DESKTOP NAVIGATION
+          ==================================================== */}
+
+          <nav className="hidden items-center gap-2 lg:flex">
+
+            {/* ==================================================
+                SERVICES
+            ================================================== */}
+
             <div className="group relative">
+
               <button
                 className="
                   flex
@@ -87,228 +165,515 @@ function NAVBAR() {
                   text-[16px]
                   font-medium
                   text-gray-800
-                  transition
+                  transition-all
+                  duration-200
                   hover:bg-blue-50
                   hover:text-blue-600
                 "
               >
-                <Grid2X2 size={20} className="text-blue-600" />
-                Services
+                <Grid2X2
+                  size={20}
+                  className="text-blue-600"
+                />
+
+                Tools
+
                 <ChevronDown size={16} />
               </button>
 
-              {/* SERVICES DROPDOWN */}
-    <div
+
+              {/* ================================================
+                  SERVICES DROPDOWN
+              ================================================= */}
+
+              <div
   className="
     invisible
     absolute
-    
-    top-[65px]
     left-[185px]
+    top-[80px]
     z-50
     w-[900px]
     max-w-[calc(100vw-30px)]
     -translate-x-1/2
     translate-y-2
-    rounded-2xl
+    rounded-xl
     border
     border-gray-200
     bg-white
-    p-5
+    p-3
     opacity-0
-    shadow-[0_20px_60px_rgba(37,99,235,0.15)]
+    shadow-[0_18px_50px_rgba(15,23,42,0.12)]
     transition-all
     duration-300
+    ease-out
     group-hover:visible
     group-hover:translate-y-0
     group-hover:opacity-100
   "
 >
-  <div className="grid grid-cols-6 gap-6">
+  {/* ==================================================
+      TOOLS GRID
+  ================================================== */}
 
-    {/* AI & Search */}
-    <div>
-      <div className="mb-4 flex items-center gap-2">
+  <div className="grid grid-cols-4 divide-x divide-gray-200">
+
+    {/* ==================================================
+        SEO TOOLS
+    ================================================== */}
+
+    <div className="px-2.5 first:pl-1">
+
+      <div
+        className="
+          mb-2.5
+          flex
+          items-center
+          gap-2
+          rounded-md
+          border
+          border-blue-100
+          bg-blue-50
+          px-2.5
+          py-2
+        "
+      >
         <div
           className="
-            flex h-7 w-7 items-center justify-center
-            rounded-lg
-            border border-blue-100
-            bg-blue-50
+            flex
+            h-6
+            w-6
+            shrink-0
+            items-center
+            justify-center
+            rounded-md
+            bg-white
             text-blue-500
+            shadow-sm
           "
         >
-          <Search size={15} />
+          <Search size={14} />
         </div>
 
-        <h3 className="text-sm font-semibold text-gray-800">
+        <h3 className="text-[15px] font-bold text-gray-800">
           Seo Tools
         </h3>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-0.5">
+
         <Link
           to="/geminiResponse"
-          className="block text-sm text-gray-500 transition hover:text-blue-500"
+          className="
+            group/item
+            flex
+            items-center
+            justify-between
+            rounded-md
+            px-2
+            py-1.5
+            text-[15px]
+            font-medium
+            text-gray-600
+            transition-all
+            duration-200
+            hover:bg-blue-50
+            hover:text-blue-500
+          "
         >
-          Search Keywords
+          <span>Search Keywords</span>
+          <span className="text-gray-400 transition-transform group-hover/item:translate-x-0.5 group-hover/item:text-blue-500">
+            ›
+          </span>
         </Link>
-      </div>
-      <div className="space-y-3">
+
         <Link
           to="/blog"
-          className="block text-sm text-gray-500 transition hover:text-blue-500"
+          className="
+            group/item
+            flex
+            items-center
+            justify-between
+            rounded-md
+            px-2
+            py-1.5
+            text-[15px]
+            font-medium
+            text-gray-600
+            transition-all
+            duration-200
+            hover:bg-blue-50
+            hover:text-blue-500
+          "
         >
-          Create a Blog
+          <span>Create a Blog</span>
+          <span className="text-gray-400 transition-transform group-hover/item:translate-x-0.5 group-hover/item:text-blue-500">
+            ›
+          </span>
         </Link>
-      </div>
-       <div className="space-y-3">
+
         <Link
           to="/websiteaudit"
-          className="block text-sm text-gray-500 transition hover:text-blue-500"
+          className="
+            group/item
+            flex
+            items-center
+            justify-between
+            rounded-md
+            px-2
+            py-1.5
+            text-[15px]
+            font-medium
+            text-gray-600
+            transition-all
+            duration-200
+            hover:bg-blue-50
+            hover:text-blue-500
+          "
         >
-          Website Audit 
+          <span>Website Audit</span>
+          <span className="text-gray-400 transition-transform group-hover/item:translate-x-0.5 group-hover/item:text-blue-500">
+            ›
+          </span>
         </Link>
+
       </div>
     </div>
 
-    {/* Content & Blog */}
-    <div>
-      <div className="mb-4 flex items-center gap-2">
+
+    {/* ==================================================
+        WEBSITE TOOLS
+    ================================================== */}
+
+    <div className="px-2.5">
+
+      <div
+        className="
+          mb-2.5
+          flex
+          items-center
+          gap-2
+          rounded-md
+          border
+          border-blue-100
+          bg-blue-50
+          px-2.5
+          py-2
+        "
+      >
         <div
           className="
-            flex h-7 w-7 items-center justify-center
-            rounded-lg
-            border border-blue-100
-            bg-blue-50
+            flex
+            h-6
+            w-6
+            shrink-0
+            items-center
+            justify-center
+            rounded-md
+            bg-white
             text-blue-500
+            shadow-sm
           "
         >
-          <Rocket size={15} />
+          <Rocket size={14} />
         </div>
 
-        <h3 className="text-sm font-semibold text-gray-800">
-         Website Tools
+        <h3 className="text-[15px] font-bold text-gray-800">
+          Website Tools
         </h3>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-0.5">
+
         <Link
           to="/wpplugin"
-          className="block text-sm text-gray-500 transition hover:text-blue-500"
+          className="
+            group/item
+            flex
+            items-center
+            justify-between
+            rounded-md
+            px-2
+            py-1.5
+            text-[15px]
+            font-medium
+            text-gray-600
+            transition-all
+            duration-200
+            hover:bg-blue-50
+            hover:text-blue-500
+          "
         >
-          Create WPPlugins
+          <span>Create WPPlugins</span>
+          <span className="text-gray-400 transition-transform group-hover/item:translate-x-0.5 group-hover/item:text-blue-500">
+            ›
+          </span>
         </Link>
-      </div>
-      <div className="space-y-3">
+
         <Link
           to="/codeformatter"
-          className="block text-sm text-gray-500 transition hover:text-blue-500"
+          className="
+            group/item
+            flex
+            items-center
+            justify-between
+            rounded-md
+            px-2
+            py-1.5
+            text-[15px]
+            font-medium
+            text-gray-600
+            transition-all
+            duration-200
+            hover:bg-blue-50
+            hover:text-blue-500
+          "
         >
-         Code Formatter 
+          <span>Code Formatter</span>
+          <span className="text-gray-400 transition-transform group-hover/item:translate-x-0.5 group-hover/item:text-blue-500">
+            ›
+          </span>
         </Link>
+
       </div>
     </div>
 
-    {/* Website & SEO */}
-    <div>
-      <div className="mb-4 flex items-center gap-2">
+
+    {/* ==================================================
+        DOCUMENT TOOLS
+    ================================================== */}
+
+    <div className="px-2.5">
+
+      <div
+        className="
+          mb-2.5
+          flex
+          items-center
+          gap-2
+          rounded-md
+          border
+          border-blue-100
+          bg-blue-50
+          px-2.5
+          py-2
+        "
+      >
         <div
           className="
-            flex h-7 w-7 items-center justify-center
-            rounded-lg
-            border border-blue-100
-            bg-blue-50
+            flex
+            h-6
+            w-6
+            shrink-0
+            items-center
+            justify-center
+            rounded-md
+            bg-white
             text-blue-500
+            shadow-sm
           "
         >
-          <Wrench size={15} />
+          <Wrench size={14} />
         </div>
 
-        <h3 className="text-sm font-semibold text-gray-800">
+        <h3 className="text-[15px] font-bold text-gray-800">
           Document Tools
         </h3>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-0.5">
+
         <Link
           to="/documentconvertor"
-          className="block text-sm text-gray-500 transition hover:text-blue-500"
+          className="
+            group/item
+            flex
+            items-center
+            justify-between
+            rounded-md
+            px-2
+            py-1.5
+            text-[15px]
+            font-medium
+            text-gray-600
+            transition-all
+            duration-200
+            hover:bg-blue-50
+            hover:text-blue-500
+          "
         >
-          Document Convertor 
+          <span>Document Convertor</span>
+          <span className="text-gray-400 transition-transform group-hover/item:translate-x-0.5 group-hover/item:text-blue-500">
+            ›
+          </span>
         </Link>
+
       </div>
     </div>
 
-    {/* Image Tools */}
-    <div>
-      <div className="mb-4 flex items-center gap-2">
+
+    {/* ==================================================
+        IMAGE TOOLS
+    ================================================== */}
+
+    <div className="px-2.5 last:pr-1">
+
+      <div
+        className="
+          mb-2.5
+          flex
+          items-center
+          gap-2
+          rounded-md
+          border
+          border-blue-100
+          bg-blue-50
+          px-2.5
+          py-2
+        "
+      >
         <div
           className="
-            flex h-7 w-7 items-center justify-center
-            rounded-lg
-            border border-blue-100
-            bg-blue-50
+            flex
+            h-6
+            w-6
+            shrink-0
+            items-center
+            justify-center
+            rounded-md
+            bg-white
             text-blue-500
+            shadow-sm
           "
         >
-          <Grid2X2 size={15} />
+          <Grid2X2 size={14} />
         </div>
 
-        <h3 className="text-sm font-semibold text-gray-800">
+        <h3 className="text-[15px] font-bold text-gray-800">
           Image Tool
         </h3>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-0.5">
+
         <Link
           to="/imageconvertor"
-          className="block text-sm text-gray-500 transition hover:text-blue-500"
+          className="
+            group/item
+            flex
+            items-center
+            justify-between
+            rounded-md
+            px-2
+            py-1.5
+            text-[15px]
+            font-medium
+            text-gray-600
+            transition-all
+            duration-200
+            hover:bg-blue-50
+            hover:text-blue-500
+          "
         >
-          Image Converter
+          <span>Image Converter</span>
+          <span className="text-gray-400 transition-transform group-hover/item:translate-x-0.5 group-hover/item:text-blue-500">
+            ›
+          </span>
         </Link>
+
       </div>
     </div>
 
-    
-
-   
-
   </div>
 
-  {/* Bottom CTA */}
-  <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
-    <div>
-      <p className="text-sm font-semibold text-gray-800">
-        Not sure which tool you need?
-      </p>
 
-      <p className="mt-1 text-xs text-gray-500">
-        Explore all our AI-powered tools and productivity solutions.
-      </p>
+  {/* ==================================================
+      BOTTOM CTA
+  ================================================== */}
+
+  <div
+    className="
+      mt-3
+      flex
+      items-center
+      justify-between
+      rounded-lg
+      border
+      border-blue-100
+      bg-blue-50
+      px-3
+      py-2.5
+    "
+  >
+
+    <div className="flex items-center gap-2.5">
+
+      <div
+        className="
+          flex
+          h-8
+          w-8
+          items-center
+          justify-center
+          rounded-lg
+          bg-blue-500
+          text-white
+          shadow-sm
+        "
+      >
+        <Rocket size={15} />
+      </div>
+
+      <div>
+
+        <p className="text-[14px] font-bold text-gray-800">
+          Not sure which tool you need?
+        </p>
+
+        <p className="mt-0.5 text-[12px] text-gray-500">
+          Explore all our AI-powered tools and productivity solutions.
+        </p>
+
+      </div>
+
     </div>
+
 
     <Link
       to="/features"
       className="
-        rounded-lg
+        flex
+        items-center
+        gap-1.5
+        rounded-full
         bg-blue-500
-        px-5
-        py-2
-        text-sm
+        px-4
+        py-1.5
+        text-[13px]
         font-semibold
         text-white
-        transition
+        shadow-sm
+        transition-all
+        duration-200
         hover:bg-blue-600
+        hover:shadow-md
       "
     >
-      View All Tools →
+      View All Tools
+      <span className="text-sm leading-none">→</span>
     </Link>
+
   </div>
+
 </div>
+
             </div>
 
-            {/* PRICING */}
+
+            {/* ==================================================
+                PRICING
+            ================================================== */}
+
             <Link
               to="/pricing"
               className="
@@ -321,16 +686,27 @@ function NAVBAR() {
                 text-[16px]
                 font-medium
                 text-gray-800
-                transition
+                transition-all
+                duration-200
                 hover:bg-blue-50
                 hover:text-blue-600
               "
             >
-              <Tag size={20} className="text-blue-600" />
+
+              <Tag
+                size={20}
+                className="text-blue-600"
+              />
+
               Pricing
+
             </Link>
 
-            {/* HOW IT WORKS */}
+
+            {/* ==================================================
+                HOW IT WORKS
+            ================================================== */}
+
             <Link
               to="/howitworks"
               className="
@@ -343,16 +719,27 @@ function NAVBAR() {
                 text-[16px]
                 font-medium
                 text-gray-800
-                transition
+                transition-all
+                duration-200
                 hover:bg-blue-50
                 hover:text-blue-600
               "
             >
-              <Rocket size={20} className="text-blue-600" />
+
+              <Rocket
+                size={20}
+                className="text-blue-600"
+              />
+
               How it works
+
             </Link>
 
-            {/* REVIEW */}
+
+            {/* ==================================================
+                REVIEW
+            ================================================== */}
+
             <Link
               to="/review"
               className="
@@ -365,16 +752,27 @@ function NAVBAR() {
                 text-[16px]
                 font-medium
                 text-gray-800
-                transition
+                transition-all
+                duration-200
                 hover:bg-blue-50
                 hover:text-blue-600
               "
             >
-              <MessageSquare size={20} className="text-blue-600" />
+
+              <MessageSquare
+                size={20}
+                className="text-blue-600"
+              />
+
               Review
+
             </Link>
 
-            {/* BLOG */}
+
+            {/* ==================================================
+                BLOG
+            ================================================== */}
+
             <Link
               to="/blogdisplay"
               className="
@@ -387,18 +785,35 @@ function NAVBAR() {
                 text-[16px]
                 font-medium
                 text-gray-800
-                transition
+                transition-all
+                duration-200
                 hover:bg-blue-50
                 hover:text-blue-600
               "
             >
-              <FileText size={20} className="text-blue-600" />
+
+              <FileText
+                size={20}
+                className="text-blue-600"
+              />
+
               Blog
+
             </Link>
+
           </nav>
 
-          {/* ================= DESKTOP AUTH ================= */}
+
+          {/* ====================================================
+              DESKTOP AUTH
+          ==================================================== */}
+
           <div className="hidden items-center gap-3 lg:flex">
+
+            {/* ==================================================
+                LOGIN
+            ================================================== */}
+
             {!token && (
               <button
                 onClick={() => navigate("/login")}
@@ -411,7 +826,8 @@ function NAVBAR() {
                   py-3
                   font-medium
                   text-gray-800
-                  transition
+                  transition-all
+                  duration-200
                   hover:border-blue-500
                   hover:bg-blue-50
                   hover:text-blue-600
@@ -420,6 +836,11 @@ function NAVBAR() {
                 Login
               </button>
             )}
+
+
+            {/* ==================================================
+                GET STARTED
+            ================================================== */}
 
             {!token && (
               <button
@@ -436,115 +857,138 @@ function NAVBAR() {
                   text-white
                   shadow-lg
                   shadow-blue-600/20
-                  transition
+                  transition-all
+                  duration-200
                   hover:bg-blue-700
                   hover:shadow-xl
                 "
               >
                 Get Started
+
                 <span>→</span>
+
               </button>
             )}
-        
-         {token && 
-                   <div className="group relative">
-  {/* User Icon */}
-  <button
-    className="
-      flex h-11 w-11 right-16
-      items-center justify-center
-      rounded-full
-      bg-blue-50
-      text-blue-600
-      transition-all duration-300
-      hover:bg-blue-600
-      hover:text-white
-      hover:shadow-lg
-      hover:shadow-blue-600/20
-    "
-  >
-    <UserRound size={22} />
-  </button>
 
-  {/* Dropdown */}
-  <div
-    className="
-      invisible
-      absolute
-      right-0
-      top-14
-      z-50
-      w-52
-      translate-y-2
-      rounded-2xl
-      border
-      border-blue-100
-      bg-white
-      p-2
-      opacity-0
-      shadow-[0_15px_40px_rgba(37,99,235,0.15)]
-      transition-all
-      duration-300
-      ease-out
 
-      group-hover:visible
-      group-hover:translate-y-0
-      group-hover:opacity-100
-    "
-  >
-    {/* Dashboard */}
-    <Link
-      to="/dashboard"
-      className="
-        flex items-center
-        rounded-xl
-        px-4 py-3
-        text-sm font-semibold
-        text-gray-700
-        transition-all duration-200
-        hover:bg-blue-50
-        hover:text-blue-600
-      "
-    >
-      DASHBOARD
-    </Link>
+            {/* ==================================================
+                USER DROPDOWN
+            ================================================== */}
 
-    {/* Divider */}
-    <div className="my-1 h-px bg-gray-100" />
+            {token && (
+              <div className="group relative">
 
-    {/* Logout */}
-    {token && (
-      <button
-        onClick={() => {
-          dispatch(logout());
-          navigate("/login");
-          toast.info("Logged out successfully");
-        }}
-        className="
-          w-full
-          rounded-xl
-          px-4 py-3
-          text-left
-          text-sm font-semibold
-          text-red-500
-          transition-all duration-200
-          hover:bg-red-50
-          hover:text-red-600
-        "
-      >
-        LOGOUT
-      </button>
-    )}
-  </div>
-</div>
-         }   
+                <button
+                  className="
+                    flex
+                    h-11
+                    w-11
+                    items-center
+                    justify-center
+                    rounded-full
+                    bg-blue-50
+                    text-blue-600
+                    transition-all
+                    duration-300
+                    hover:bg-blue-600
+                    hover:text-white
+                    hover:shadow-lg
+                    hover:shadow-blue-600/20
+                  "
+                >
+                  <UserRound size={22} />
+                </button>
 
- 
-              
+
+                {/* USER DROPDOWN */}
+
+                <div
+                  className="
+                    invisible
+                    absolute
+                    right-0
+                    top-14
+                    z-50
+                    w-52
+                    translate-y-2
+                    rounded-2xl
+                    border
+                    border-blue-100
+                    bg-white
+                    p-2
+                    opacity-0
+                    shadow-[0_15px_40px_rgba(37,99,235,0.15)]
+                    transition-all
+                    duration-300
+                    ease-out
+                    group-hover:visible
+                    group-hover:translate-y-0
+                    group-hover:opacity-100
+                  "
+                >
+
+                  {/* DASHBOARD */}
+
+                  <Link
+                    to="/dashboard"
+                    className="
+                      flex
+                      items-center
+                      rounded-xl
+                      px-4
+                      py-3
+                      text-sm
+                      font-semibold
+                      text-gray-700
+                      transition-all
+                      duration-200
+                      hover:bg-blue-50
+                      hover:text-blue-600
+                    "
+                  >
+                    DASHBOARD
+                  </Link>
+
+
+                  {/* DIVIDER */}
+
+                  <div className="my-1 h-px bg-gray-100" />
+
+
+                  {/* LOGOUT */}
+
+                  <button
+                    onClick={handleLogout}
+                    className="
+                      w-full
+                      rounded-xl
+                      px-4
+                      py-3
+                      text-left
+                      text-sm
+                      font-semibold
+                      text-red-500
+                      transition-all
+                      duration-200
+                      hover:bg-red-50
+                      hover:text-red-600
+                    "
+                  >
+                    LOGOUT
+                  </button>
+
+                </div>
+
+              </div>
+            )}
 
           </div>
 
-          {/* ================= MOBILE BUTTON ================= */}
+
+          {/* ====================================================
+              MOBILE BUTTON
+          ==================================================== */}
+
           <button
             onClick={() => setMobileMenu(!mobileMenu)}
             className="
@@ -556,14 +1000,26 @@ function NAVBAR() {
               rounded-xl
               bg-blue-50
               text-blue-600
+              transition-all
+              duration-200
+              hover:bg-blue-100
               lg:hidden
             "
           >
-            {mobileMenu ? <X size={24} /> : <Menu size={24} />}
+            {mobileMenu ? (
+              <X size={24} />
+            ) : (
+              <Menu size={24} />
+            )}
           </button>
+
         </div>
 
-        {/* ================= MOBILE MENU ================= */}
+
+        {/* ======================================================
+            MOBILE MENU
+        ====================================================== */}
+
         {mobileMenu && (
           <div
             className="
@@ -575,69 +1031,151 @@ function NAVBAR() {
               bg-white
               p-5
               shadow-xl
+              transition-all
+              duration-300
               lg:hidden
             "
           >
+
             <div className="flex flex-col gap-2">
+
               <Link
                 to="/"
                 onClick={() => setMobileMenu(false)}
-                className="rounded-xl px-4 py-3 font-medium text-gray-800 hover:bg-blue-50"
+                className="
+                  rounded-xl
+                  px-4
+                  py-3
+                  font-medium
+                  text-gray-800
+                  transition
+                  hover:bg-blue-50
+                "
               >
                 Product
               </Link>
 
+
               <Link
                 to="/features"
                 onClick={() => setMobileMenu(false)}
-                className="rounded-xl px-4 py-3 font-medium text-gray-800 hover:bg-blue-50"
+                className="
+                  rounded-xl
+                  px-4
+                  py-3
+                  font-medium
+                  text-gray-800
+                  transition
+                  hover:bg-blue-50
+                "
               >
                 Features
               </Link>
 
+
               <Link
                 to=""
                 onClick={() => setMobileMenu(false)}
-                className="rounded-xl px-4 py-3 font-medium text-gray-800 hover:bg-blue-50"
+                className="
+                  rounded-xl
+                  px-4
+                  py-3
+                  font-medium
+                  text-gray-800
+                  transition
+                  hover:bg-blue-50
+                "
               >
                 Services
               </Link>
 
+
               <Link
-                to=""
+                to="/pricing"
                 onClick={() => setMobileMenu(false)}
-                className="rounded-xl px-4 py-3 font-medium text-gray-800 hover:bg-blue-50"
+                className="
+                  rounded-xl
+                  px-4
+                  py-3
+                  font-medium
+                  text-gray-800
+                  transition
+                  hover:bg-blue-50
+                "
               >
                 Pricing
               </Link>
 
+
               <Link
                 to="/howitworks"
                 onClick={() => setMobileMenu(false)}
-                className="rounded-xl px-4 py-3 font-medium text-gray-800 hover:bg-blue-50"
+                className="
+                  rounded-xl
+                  px-4
+                  py-3
+                  font-medium
+                  text-gray-800
+                  transition
+                  hover:bg-blue-50
+                "
               >
                 How it works
               </Link>
 
+
               <Link
-                to=""
+                to="/review"
                 onClick={() => setMobileMenu(false)}
-                className="rounded-xl px-4 py-3 font-medium text-gray-800 hover:bg-blue-50"
+                className="
+                  rounded-xl
+                  px-4
+                  py-3
+                  font-medium
+                  text-gray-800
+                  transition
+                  hover:bg-blue-50
+                "
               >
                 Review
               </Link>
 
+
               <Link
-                to=""
+                to="/blogdisplay"
                 onClick={() => setMobileMenu(false)}
-                className="rounded-xl px-4 py-3 font-medium text-gray-800 hover:bg-blue-50"
+                className="
+                  rounded-xl
+                  px-4
+                  py-3
+                  font-medium
+                  text-gray-800
+                  transition
+                  hover:bg-blue-50
+                "
               >
                 Blog
               </Link>
+
             </div>
 
-            {/* Mobile Auth */}
-            <div className="mt-4 flex flex-col gap-3 border-t border-gray-100 pt-4">
+
+            {/* ==================================================
+                MOBILE AUTH
+            ================================================== */}
+
+            <div
+              className="
+                mt-4
+                flex
+                flex-col
+                gap-3
+                border-t
+                border-gray-100
+                pt-4
+              "
+            >
+
               {!token && (
                 <button
                   onClick={() => {
@@ -653,11 +1191,15 @@ function NAVBAR() {
                     py-3
                     font-medium
                     text-gray-800
+                    transition
+                    hover:border-blue-500
+                    hover:bg-blue-50
                   "
                 >
                   Login
                 </button>
               )}
+
 
               {!token && (
                 <button
@@ -673,20 +1215,18 @@ function NAVBAR() {
                     py-3
                     font-semibold
                     text-white
+                    transition
+                    hover:bg-blue-700
                   "
                 >
                   Get Started →
                 </button>
               )}
 
+
               {token && (
                 <button
-                  onClick={() => {
-                    dispatch(logout());
-                    navigate("/login");
-                    setMobileMenu(false);
-                    toast.info("Logged out successfully");
-                  }}
+                  onClick={handleLogout}
                   className="
                     w-full
                     rounded-xl
@@ -695,16 +1235,20 @@ function NAVBAR() {
                     py-3
                     font-semibold
                     text-white
+                    transition
+                    hover:bg-blue-700
                   "
                 >
                   Logout
                 </button>
               )}
+
             </div>
+
           </div>
         )}
-      </header> 
-    
+
+      </header>
     </>
   );
 }

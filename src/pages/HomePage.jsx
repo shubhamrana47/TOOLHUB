@@ -19,7 +19,7 @@ import Pricing from "../component/Pricing"
 const HomePage = () => {
   return (
     <div> 
-          <NAVBAR/>
+          <NAVBAR  />
            <ToolsHero/>
           {/* <Section1/> */}
           <Section2/>

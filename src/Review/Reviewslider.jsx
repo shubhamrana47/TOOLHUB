@@ -426,14 +426,14 @@ const ReviewHeading = () => {
           leading-tight
           tracking-[-1px]
           text-gray-900
-          sm:text-4xl
+          sm:text-3xl
           sm:tracking-[-1.5px]
-          md:text-5xl
-          lg:text-6xl
+          md:text-4xl
+          lg:text-5xl
           lg:tracking-[-2px]
         "
       >
-        What Our Users Say
+        What Our  <span className="text-blue-600"> Users Say</span> 
       </h2>
 
       {/* DESCRIPTION */}

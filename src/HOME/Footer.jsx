@@ -151,7 +151,7 @@ const Footer = () => {
           <p className="text-xs text-gray-400 text-center md:text-left">
             © {new Date().getFullYear()}{" "}
             <span className="font-semibold text-gray-500">
-              TASKIFY
+              TOOLSHUBS
             </span>
             . All rights reserved.
           </p>
