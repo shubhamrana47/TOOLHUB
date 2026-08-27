@@ -1,60 +1,36 @@
-import nodemailer from "nodemailer";
-
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-
-  tls: {
-    rejectUnauthorized: false,
-  },
-
-  connectionTimeout: 20000,
-  greetingTimeout: 20000,
-  socketTimeout: 20000,
-});
+import axios from "axios";
 
 const sendOtpEmail = async (email, otp) => {
-  console.log("📧 Sending OTP email to:", email);
-
-  const mailOptions = {
-    from: `"Toolhub" <${process.env.EMAIL_USER}>`,
-    to: email,
-    subject: "Your Toolhub OTP",
-    text: `Your OTP is ${otp}. This OTP is valid for 10 minutes.`,
-    html: `
-      <div style="font-family: Arial, sans-serif;">
-        <h2>Toolhub Email Verification</h2>
-        <p>Your OTP is:</p>
-
-        <h1 style="letter-spacing: 6px;">
-          ${otp}
-        </h1>
-
-        <p>This OTP is valid for 10 minutes.</p>
-
-        <p>If you did not request this OTP, you can ignore this email.</p>
-      </div>
-    `,
-  };
+  console.log("📧 Sending OTP through email relay to:", email);
 
   try {
-    const info = await transporter.sendMail(mailOptions);
+    const response = await axios.post(
+      `${process.env.EMAIL_RELAY_URL}/send-otp`,
+      {
+        email,
+        otp,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.EMAIL_RELAY_SECRET}`,
+          "Content-Type": "application/json",
+        },
+        timeout: 20000,
+      }
+    );
 
-    console.log("✅ OTP email sent successfully");
-    console.log("Message ID:", info.messageId);
+    console.log("✅ OTP email sent successfully through relay");
 
-    return info;
+    return response.data;
   } catch (error) {
-    console.error("❌ OTP email failed:");
-    console.error("Code:", error.code);
-    console.error("Command:", error.command);
-    console.error("Message:", error.message);
+    console.error("❌ Email relay failed:");
+
+    if (error.response) {
+      console.error("Status:", error.response.status);
+      console.error("Response:", error.response.data);
+    } else {
+      console.error("Message:", error.message);
+    }
 
     throw error;
   }
