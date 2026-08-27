@@ -8,7 +8,7 @@ export default function useGeminiSearch() {
 
   const handleSubmit = async () => {
     if (!question.trim()) {
-      alert("Please enter a question.");
+      toast.error("Please enter a search query.");
       return null;
     }
 
@@ -18,35 +18,13 @@ export default function useGeminiSearch() {
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/gemini/chat`,
         {
-          prompt: `
-You are an SEO expert.
-
-For the search query: "${question}"
-
-Generate exactly 6 SEO keywords.
-
-Return ONLY valid JSON:
-
-{
-  "keywords": [
-    {
-      "keyword": "",
-      "searchVolume": 0,
-      "seoDifficulty": 0,
-      "competition": 0,
-      "cpc": 0
-    }
-  ]
-}
-
-Rules:
-- searchVolume = estimated monthly search volume
-- seoDifficulty = number between 1 and 100
-- competition = number between 0.00 and 1.00
-- cpc = estimated CPC in INR
-- Generate exactly 6 keywords
-- Return only JSON
-`,
+          // Send only the user's search query.
+          // Your backend creates the SEO prompt.
+          prompt: question,
+        },
+        {
+          // Stop waiting after 30 seconds
+          timeout: 30000,
         }
       );
 
@@ -57,7 +35,10 @@ Rules:
     } catch (error) {
       console.error("Gemini Error:", error);
 
-      // Gemini is temporarily unavailable
+      // ==========================================
+      // GEMINI TEMPORARILY UNAVAILABLE
+      // ==========================================
+
       if (error.response?.status === 503) {
         toast.error(
           "TOOLHUB is temporarily under maintenance. Please try again later."
@@ -66,7 +47,25 @@ Rules:
         return null;
       }
 
-      // Other errors
+      // ==========================================
+      // REQUEST TIMEOUT
+      // ==========================================
+
+      if (
+        error.code === "ECONNABORTED" ||
+        error.code === "ETIMEDOUT"
+      ) {
+        toast.error(
+          "TOOLHUB is taking longer than expected. Please try again."
+        );
+
+        return null;
+      }
+
+      // ==========================================
+      // OTHER ERRORS
+      // ==========================================
+
       toast.error(
         error.response?.data?.message ||
         "Something went wrong. Please try again."
