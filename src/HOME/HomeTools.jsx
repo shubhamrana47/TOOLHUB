@@ -43,7 +43,8 @@ const tools = [
     number: "04",
     icon: Wrench,
     title: "Image Convertor",
-    description: "Tool for converting image online easily",
+    description:
+      "Tool for converting image online easily.",
     button: "Convert Now",
     path: "/imageconvertor",
   },
@@ -52,7 +53,7 @@ const tools = [
     icon: MessageSquareCode,
     title: "Document Convertor",
     description:
-      "Tool for converting Document online at a ease",
+      "Tool for converting documents online with ease.",
     button: "Convert DOC Now",
     path: "/documentconvertor",
   },
@@ -60,7 +61,8 @@ const tools = [
     number: "06",
     icon: Code2Icon,
     title: "Code Formatter",
-    description: "Tool for formatting code",
+    description:
+      "Format and organize your code quickly and easily.",
     button: "Format Code",
     path: "/codeformatter",
   },
@@ -70,60 +72,76 @@ const HomeTools = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative overflow-hidden bg-slate-50 px-4 py-12 sm:px-6 lg:px-10">
+    <section className="relative overflow-hidden bg-slate-50 px-4 py-14 sm:px-6 lg:px-10">
 
       {/* Background Decoration */}
       <div className="pointer-events-none absolute -left-24 top-20 h-64 w-64 rounded-full bg-blue-100/40 blur-3xl" />
+
       <div className="pointer-events-none absolute -right-24 bottom-10 h-72 w-72 rounded-full bg-blue-100/40 blur-3xl" />
+
 
       <div className="relative mx-auto max-w-6xl">
 
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 shadow-sm">
+        <div className="mb-10">
+
+          <div className="flex items-center gap-4">
+
+            {/* Header Icon */}
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-600 shadow-sm">
+
               <Wrench
-                size={21}
+                size={24}
                 strokeWidth={2}
                 className="text-white"
               />
+
             </div>
 
+
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-blue-600">
+
+              <p className="text-sm font-bold uppercase tracking-wider text-blue-600">
                 All-in-One Platform
               </p>
 
-              <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">
+              <h2 className="text-3xl font-extrabold leading-tight text-slate-900 sm:text-4xl lg:text-5xl">
                 Powerful Tools to Grow Your Online Presence
               </h2>
+
             </div>
+
           </div>
 
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-500 sm:text-base">
+
+          <p className="mt-4 max-w-3xl text-base font-medium leading-7 text-slate-600 sm:text-lg">
             From keyword research to content creation and website optimization,
             everything you need is in one place.
           </p>
+
         </div>
 
+
         {/* Tools Grid */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
 
           {tools.map((tool) => {
+
             const Icon = tool.icon;
 
             return (
+
               <div
                 key={tool.number}
                 className="
                   group
                   relative
-                  min-h-[180px]
-                  rounded-xl
+                  min-h-[220px]
+                  rounded-2xl
                   border
                   border-slate-200
                   bg-white
-                  p-4
+                  p-6
                   shadow-[0_4px_18px_rgba(15,23,42,0.06)]
                   transition-all
                   duration-300
@@ -140,11 +158,11 @@ const HomeTools = () => {
                   <div
                     className="
                       flex
-                      h-10
-                      w-10
+                      h-12
+                      w-12
                       items-center
                       justify-center
-                      rounded-lg
+                      rounded-xl
                       border
                       border-blue-100
                       bg-blue-50
@@ -153,60 +171,92 @@ const HomeTools = () => {
                       group-hover:bg-blue-600
                     "
                   >
+
                     <Icon
-                      size={21}
+                      size={24}
                       strokeWidth={2}
-                      className="text-blue-600 transition-colors duration-300 group-hover:text-white"
+                      className="
+                        text-blue-600
+                        transition-colors
+                        duration-300
+                        group-hover:text-white
+                      "
                     />
+
                   </div>
+
 
                   {/* Number */}
                   <div
                     className="
                       flex
-                      h-6
-                      min-w-6
+                      h-7
+                      min-w-7
                       items-center
                       justify-center
                       rounded-full
                       bg-blue-50
                       px-2
-                      text-[10px]
-                      font-bold
+                      text-xs
+                      font-extrabold
                       text-blue-600
                     "
                   >
                     {tool.number}
                   </div>
+
                 </div>
 
-                {/* Content */}
-                <div className="mt-3">
 
-                  <h3 className="text-[15px] font-bold leading-5 text-slate-800">
+                {/* Content */}
+                <div className="mt-5">
+
+                  {/* Card Heading */}
+                  <h3
+                    className="
+                      text-xl
+                      font-extrabold
+                      leading-6
+                      text-slate-900
+                      transition-colors
+                      duration-300
+                      group-hover:text-blue-600
+                    "
+                  >
                     {tool.title}
                   </h3>
 
-                  <p className="mt-1.5 line-clamp-2 text-[11px] leading-4 text-slate-500">
+
+                  {/* Card Description */}
+                  <p
+                    className="
+                      mt-2.5
+                      text-sm
+                      font-medium
+                      leading-6
+                      text-slate-600
+                    "
+                  >
                     {tool.description}
                   </p>
 
                 </div>
 
+
                 {/* Button */}
                 <button
                   onClick={() => navigate(tool.path)}
                   className="
-                    mt-3
+                    mt-5
                     inline-flex
                     items-center
-                    gap-1.5
-                    rounded-md
+                    gap-2
+                    rounded-lg
                     bg-blue-600
-                    px-3
-                    py-1.5
-                    text-[10px]
-                    font-semibold
+                    px-4
+                    py-2
+                    text-sm
+                    font-bold
                     text-white
                     shadow-sm
                     shadow-blue-200
@@ -216,29 +266,47 @@ const HomeTools = () => {
                     hover:shadow-md
                   "
                 >
+
                   {tool.button}
 
                   <ArrowRight
-                    size={12}
-                    className="transition-transform duration-200 group-hover:translate-x-0.5"
+                    size={15}
+                    className="
+                      transition-transform
+                      duration-200
+                      group-hover:translate-x-1
+                    "
                   />
+
                 </button>
 
               </div>
+
             );
           })}
 
         </div>
 
+
         {/* Bottom Message */}
-        <div className="mt-8 flex items-center gap-4">
+        <div className="mt-10 flex items-center gap-4">
 
           <div className="hidden h-px flex-1 bg-slate-200 sm:block" />
 
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-600 sm:text-sm">
+          <div
+            className="
+              flex
+              items-center
+              gap-2
+              text-sm
+              font-bold
+              text-slate-700
+              sm:text-base
+            "
+          >
 
             <ShieldCheck
-              size={18}
+              size={20}
               className="text-blue-600"
             />
 
@@ -261,6 +329,7 @@ const HomeTools = () => {
         </div>
 
       </div>
+
     </section>
   );
 };
