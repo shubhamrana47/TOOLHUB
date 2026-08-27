@@ -105,7 +105,7 @@ const HomeTools = () => {
                 All-in-One Platform
               </p>
 
-              <h2 className="text-3xl font-extrabold leading-tight text-slate-900 sm:text-4xl lg:text-5xl">
+              <h2 className="text-4xl font-extrabold leading-tight text-slate-900 sm:text-4xl lg:text-5xl">
                 Powerful Tools to Grow Your Online Presence
               </h2>
 
