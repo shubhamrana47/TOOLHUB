@@ -74,7 +74,7 @@ const Pricing = () => {
           Simple & Transparent Pricing
         </div>
 
-        <h1 className="text-6xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl lg:text-7xl">
+        <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl lg:text-7xl">
   Choose the plan that{" "}
   <span className="text-blue-600">works for you</span>
 </h1>

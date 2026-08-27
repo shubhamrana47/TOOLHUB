@@ -243,7 +243,7 @@ const Howitworksintro = () => {
         transition={{ delay: 0.5 }}
         className="relative z-10 mt-12 text-center text-sm font-medium tracking-wide text-gray-400"
       >
-        Simple tools. Powerful automation. Your workflow.
+        Simple tools.<span classname="text-blue-500" > Powerful automation</span>  . Your workflow.
       </motion.p>
 
     </section>

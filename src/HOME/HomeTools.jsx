@@ -106,7 +106,7 @@ const HomeTools = () => {
               </p>
 
               <h2 className="text-4xl font-extrabold leading-tight text-slate-900 sm:text-4xl lg:text-5xl">
-                Powerful Tools to Grow Your Online Presence
+                Powerful Tools to Grow Your <span className="text-blue-500">Online Presence</span> 
               </h2>
 
             </div>
