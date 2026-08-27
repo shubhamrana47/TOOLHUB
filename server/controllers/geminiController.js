@@ -107,8 +107,21 @@ Rules:
     } catch (parseError) {
       console.error(
         "Gemini JSON parse error:",
-        parseError
+        parseError,
+
       );
+        console.error(
+    "Gemini keyword generation error:",
+    error
+  );
+
+  if (isGeminiUnavailable(error)) {
+    return res.status(503).json({
+      success: false,
+      maintenance: true,
+      message:
+        "TOOLHUB is temporarily under maintenance. Please try again later.",
+    });
 
       console.error(
         "Gemini returned:",
