@@ -1,6 +1,20 @@
 import { generateGeminiContent } from "../config/gemini.js";
 
 
+
+// ============================================================
+// CHECK GEMINI TEMPORARY UNAVAILABLE ERROR
+// ============================================================
+
+const isGeminiUnavailable = (error) => {
+  return (
+    error?.status === 503 ||
+    error?.response?.status === 503 ||
+    error?.message?.includes('"code":503') ||
+    error?.message?.includes("UNAVAILABLE") ||
+    error?.message?.includes("high demand")
+  );
+};
 // ============================================================
 // GENERATE SEO KEYWORDS
 // ============================================================

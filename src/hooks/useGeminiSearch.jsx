@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function useGeminiSearch() {
   const [question, setQuestion] = useState("");
@@ -52,10 +53,27 @@ Rules:
       console.log("Keywords:", data.keywords);
 
       return data.keywords;
+
     } catch (error) {
       console.error("Gemini Error:", error);
-      alert("Something went wrong.");
+
+      // Gemini is temporarily unavailable
+      if (error.response?.status === 503) {
+        toast.error(
+          "TOOLHUB is temporarily under maintenance. Please try again later."
+        );
+
+        return null;
+      }
+
+      // Other errors
+      toast.error(
+        error.response?.data?.message ||
+        "Something went wrong. Please try again."
+      );
+
       return null;
+
     } finally {
       setLoading(false);
     }
