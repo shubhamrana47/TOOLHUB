@@ -1,7 +1,6 @@
 import { generateGeminiContent } from "../config/gemini.js";
 
 
-
 // ============================================================
 // CHECK GEMINI TEMPORARY UNAVAILABLE ERROR
 // ============================================================
@@ -15,6 +14,8 @@ const isGeminiUnavailable = (error) => {
     error?.message?.includes("high demand")
   );
 };
+
+
 // ============================================================
 // GENERATE SEO KEYWORDS
 // ============================================================
@@ -42,7 +43,7 @@ export const chatWithGemini = async (req, res) => {
     console.log("=================================");
 
     // --------------------------------------------------------
-    // Short optimized prompt
+    // SEO PROMPT
     // --------------------------------------------------------
 
     const finalPrompt = `
@@ -76,7 +77,7 @@ Rules:
 `;
 
     // --------------------------------------------------------
-    // Generate response
+    // GENERATE RESPONSE
     // --------------------------------------------------------
 
     const text = await generateGeminiContent(
@@ -88,7 +89,7 @@ Rules:
     );
 
     // --------------------------------------------------------
-    // Clean response
+    // CLEAN RESPONSE
     // --------------------------------------------------------
 
     const cleanedText = text
@@ -97,7 +98,7 @@ Rules:
       .trim();
 
     // --------------------------------------------------------
-    // Parse JSON
+    // PARSE JSON
     // --------------------------------------------------------
 
     let data;
@@ -107,21 +108,8 @@ Rules:
     } catch (parseError) {
       console.error(
         "Gemini JSON parse error:",
-        parseError,
-
+        parseError
       );
-        console.error(
-    "Gemini keyword generation error:",
-    error
-  );
-
-  if (isGeminiUnavailable(error)) {
-    return res.status(503).json({
-      success: false,
-      maintenance: true,
-      message:
-        "TOOLHUB is temporarily under maintenance. Please try again later.",
-    });
 
       console.error(
         "Gemini returned:",
@@ -135,7 +123,7 @@ Rules:
     }
 
     // --------------------------------------------------------
-    // Validate keywords
+    // VALIDATE KEYWORDS
     // --------------------------------------------------------
 
     if (
@@ -149,7 +137,7 @@ Rules:
     }
 
     // --------------------------------------------------------
-    // Return exactly 6
+    // RETURN EXACTLY 6
     // --------------------------------------------------------
 
     const keywords = data.keywords
@@ -177,13 +165,36 @@ Rules:
     });
 
   } catch (error) {
+
+    // --------------------------------------------------------
+    // LOG ERROR
+    // --------------------------------------------------------
+
     console.error(
       "Gemini keyword generation error:",
       error
     );
 
+    // --------------------------------------------------------
+    // GEMINI 503 / HIGH DEMAND
+    // --------------------------------------------------------
+
+    if (isGeminiUnavailable(error)) {
+      return res.status(503).json({
+        success: false,
+        maintenance: true,
+        message:
+          "TOOLHUB is temporarily under maintenance. Please try again later.",
+      });
+    }
+
+    // --------------------------------------------------------
+    // OTHER ERRORS
+    // --------------------------------------------------------
+
     return res.status(500).json({
       success: false,
+      maintenance: false,
       message:
         error.message ||
         "Gemini API failed",
@@ -205,7 +216,7 @@ export const generateBlog = async (req, res) => {
     } = req.body;
 
     // --------------------------------------------------------
-    // Validate topic
+    // VALIDATE TOPIC
     // --------------------------------------------------------
 
     if (!topic || !topic.trim()) {
@@ -216,7 +227,7 @@ export const generateBlog = async (req, res) => {
     }
 
     // --------------------------------------------------------
-    // Validate keywords
+    // VALIDATE KEYWORDS
     // --------------------------------------------------------
 
     if (
@@ -231,7 +242,7 @@ export const generateBlog = async (req, res) => {
     }
 
     // --------------------------------------------------------
-    // Validate word limit
+    // VALIDATE WORD LIMIT
     // --------------------------------------------------------
 
     const requestedWordLimit = Number(wordLimit);
@@ -257,7 +268,7 @@ export const generateBlog = async (req, res) => {
     console.log("=================================");
 
     // --------------------------------------------------------
-    // Blog prompt
+    // BLOG PROMPT
     // --------------------------------------------------------
 
     const finalPrompt = `
@@ -328,7 +339,7 @@ Do not add anything after the BLOG.
 `;
 
     // --------------------------------------------------------
-    // Generate blog
+    // GENERATE BLOG
     // --------------------------------------------------------
 
     const blog = await generateGeminiContent(
@@ -348,13 +359,36 @@ Do not add anything after the BLOG.
     });
 
   } catch (error) {
+
+    // --------------------------------------------------------
+    // LOG ERROR
+    // --------------------------------------------------------
+
     console.error(
       "Blog generation error:",
       error
     );
 
+    // --------------------------------------------------------
+    // GEMINI 503 / HIGH DEMAND
+    // --------------------------------------------------------
+
+    if (isGeminiUnavailable(error)) {
+      return res.status(503).json({
+        success: false,
+        maintenance: true,
+        message:
+          "TOOLHUB is temporarily under maintenance. Please try again later.",
+      });
+    }
+
+    // --------------------------------------------------------
+    // OTHER ERRORS
+    // --------------------------------------------------------
+
     return res.status(500).json({
       success: false,
+      maintenance: false,
       message:
         error.message ||
         "Blog generation failed",
